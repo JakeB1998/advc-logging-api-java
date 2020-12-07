@@ -14,6 +14,8 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import com.google.common.io.Files;
 
+import main.org.botka.utility.api.util.Util;
+
 
 public class FileLogger extends BaseLogger {
 	private File mLoggerFile;

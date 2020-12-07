@@ -15,6 +15,9 @@ import java.util.Vector;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import main.org.botka.logger.logtype.LogType;
+import main.org.botka.utility.api.util.Util;
+
 
 
 /**
@@ -24,7 +27,7 @@ public class Log<T> {
 	public static final DateTimeFormatter DEFAULT_DATE_TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 	public static final boolean DEFAULT_LOG_TIME = true;
 	public static final int DEFAULT_CHARACTER_PER_LINE_COUNT = 100;
-	public static final LogType DEFAULT_LOG_TYPE = LogType.Default;
+	public static final LogType DEFAULT_LOG_TYPE = LogType.GENERAL;
 	private LogType mLogType;
 	private int mPerLineCharacterCountLimit;
 	private Object mLoggedObject;

@@ -12,7 +12,21 @@ package main.org.botka.logger;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.annotation.Nullable;
+
+import org.eclipse.jdt.annotation.NonNull;
+
+import main.org.botka.logger.logtype.ActiveLogTypes;
+import main.org.botka.logger.logtype.LogType;
+import main.org.botka.utility.api.exceptions.NotImplementedYetException;
+
 
 /**
  * Abstract class that represents the manager to handle logging data.
@@ -23,6 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class Logger {
 
 	private LogRecorder mLogRecorder;
+	private ActiveLogTypes mActiveLogTypes;
 	private volatile boolean mError;
 	private String mErrorMessage;
 	/**
@@ -31,7 +46,7 @@ public abstract class Logger {
 	public Logger() {
 		this.mLogRecorder = null;
 		this.mErrorMessage = null;
-		
+		this.mActiveLogTypes = null;
 	}
 	
 	/**
@@ -116,6 +131,39 @@ public abstract class Logger {
 		this.mError = error;
 		this.mErrorMessage = errorMessage;
 	}
+	
+	public void setLogType(@Nullable LogType logType) {
+		if (logType == null) {
+			this.mActiveLogTypes.clearSet();
+			this.mActiveLogTypes.addLogType(logType);
+		}
+		else {
+			this.mActiveLogTypes.clearSet();
+		}
+		
+	}
+	
+	/**
+	 * Sets active log types. This is not the same as the active logtypes in the recorder
+	 * @param logTypes Array of logtypes which values can not be null. However the array itself can be null.
+	 */
+	public void setActiveLogTypes(@Nullable LogType[] logTypes) {
+		if (logTypes == null) {
+			this.setLogType(null);
+		} else {
+			this.mActiveLogTypes.setActiveLogTypes(logTypes);
+		}
+	}
+	
+	public void setActiveLogTypes(@Nullable Collection<LogType> logTypes) {
+		if (logTypes == null) {
+			this.setLogType(null);
+		} else {
+			this.mActiveLogTypes.setActiveLogTypes(logTypes.toArray(new LogType[0]));
+		}
+	}
+	
+	
 	
 	/**
 	 * 

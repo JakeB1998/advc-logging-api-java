@@ -12,6 +12,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import main.org.botka.logger.logtype.LogType;
+
 /**
  * Map that sorts the log type into seperated list collections.
  * 

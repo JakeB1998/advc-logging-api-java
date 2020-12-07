@@ -7,6 +7,9 @@
 package main.org.botka.logger;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,26 +17,54 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import main.org.botka.utility.api.base.DeepCloneInstance;
+
 
 
 /**
  * @author Jake Botka
  *
  */
-public class LogCollection implements main.org.botka.logger.serialization.DeepCloneInstance<Log<?>>, Serializable {
+public class LogCollection implements DeepCloneInstance<Log<?>>, Serializable {
 	private static final long serialVersionUID = 675262036413294129L;
 	
 	private List<Log<?>> mLogCollection;
 	
+	/**
+	 * Default constructor.
+	 */
 	private LogCollection() {
 		this.mLogCollection = new ArrayList(0);
 	}
+	
 	/**
 	 * 
 	 */
 	public LogCollection(List<Log<?>> listOfLogs) {
 		this();
 		this.mLogCollection = new ArrayList<>(listOfLogs);
+	}
+	
+	public Log<?> getLog(int index){
+		return null;
+	}
+	
+	public Log<?> getLog(String logID) {
+		return null;
+	}
+	
+	public Map<LocalDateTime, Log<?>> toDateMap(){
+		return null;
+	}
+	
+	
+	
+	public Map<LocalTime, Log<?>> toTimeMap(){
+		return null;
+	}
+	
+	public Map<LocalTime, Log<?>> toTimeMap(LocalDate date){
+		return null;
 	}
 
 	/**
