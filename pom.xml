@@ -4,11 +4,8 @@
   <groupId>org.botka.aveona</groupId>
   <artifactId>aveona-logger</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <parent>
-	    <groupId>org.botka.aveona</groupId>
-  		<artifactId>aveona-utility-library</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  </parent>
+  <packaging>jar</packaging>
+  
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -21,13 +18,15 @@
         </configuration>
       </plugin>
     </plugins>
+     
   </build>
+  
   <dependencies>
-  <dependency>
-  		<groupId>org.botka.aveona</groupId>
-  		<artifactId>aveona-core</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  </dependency>
+	 <dependency>
+	  <groupId>org.botka.aveona</groupId>
+	  <artifactId>utility-library-core</artifactId>
+	  <version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   	<dependency>
 	    <groupId>org.eclipse.jdt</groupId>
 	    <artifactId>org.eclipse.jdt.annotation</artifactId>
@@ -38,6 +37,7 @@
   		<artifactId>junit</artifactId>
   		<version>4.13</version>
   	</dependency>
+  	
 	<dependency>
 	  <groupId>com.google.guava</groupId>
 	  <artifactId>guava</artifactId>

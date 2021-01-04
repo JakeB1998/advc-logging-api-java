@@ -16,20 +16,36 @@ import java.time.format.DateTimeFormatter;
  *
  */
 public class ConsoleLogger extends BaseLogger {
+	private final Class<?> DEFAULT_CLASS = ConsoleLogger.class;
+	private Class<?> mDefinedClass;
 	private boolean mLogTimePermission;
 
+	public ConsoleLogger() {
+		super();
+		mDefinedClass = DEFAULT_CLASS;
+	}
 	/**
 	 * 
 	 */
 	public ConsoleLogger(boolean logTime) {
 		this.mLogTimePermission = logTime;
+		
 	}
 
+	/**
+	 * 
+	 * @param log
+	 *
+	 */
 	@Override
 	public void log(Log<?> log) {
 		this.logString(log.toString());
 	}
 	
+	/**
+	 * 
+	 * @param num
+	 */
 	public void logLines(int num) {
 		String log = "";
 		if (num > 0) {
@@ -64,20 +80,6 @@ public class ConsoleLogger extends BaseLogger {
 		System.out.println();
 	}
 
-	
-	/**
-	 * Logs the time in format
-	 */
-	@Override
-	public void logTime() {
-		//throw new NotImplementedYetException();
-	}
-
-	
-	
-
-
-	
 	
 
 	@Override

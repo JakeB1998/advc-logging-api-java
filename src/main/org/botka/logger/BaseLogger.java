@@ -58,11 +58,7 @@ public class BaseLogger extends Logger {
 
 	}
 
-	@Override
-	public void logTime() {
-		
-
-	}
+	
 
 	@Override
 	public void logAll(Log<?>[] logs) {

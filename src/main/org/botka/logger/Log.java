@@ -18,91 +18,72 @@ import org.eclipse.jdt.annotation.NonNull;
 import main.org.botka.logger.logtype.LogType;
 import main.org.botka.utility.api.util.Util;
 
-
-
 /**
  * @author Jake Botka Class represents a log that contains a header and a body.
  */
 public class Log<T> {
-	public static final DateTimeFormatter DEFAULT_DATE_TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+	
 	public static final boolean DEFAULT_LOG_TIME = true;
 	public static final int DEFAULT_CHARACTER_PER_LINE_COUNT = 100;
 	public static final LogType DEFAULT_LOG_TYPE = LogType.GENERAL;
-	private LogType mLogType;
+
+	private LogHeader mLogHeader;
 	private int mPerLineCharacterCountLimit;
 	private Object mLoggedObject;
 	private String mFormattedLog;
-	private String mTimeStamp;
-	private int mTimeStampCharacterCount;
 	private boolean hasPunctuation;
+	private boolean mLogTimeFlag;
 
-	public static String getFormatedDateTime() {
-		String str = "[";
-		str += LocalDateTime.now().format(DEFAULT_DATE_TIME_FORMAT);
-		int index = str.indexOf("T");
-		if (index != -1 && index + 1 <= str.length()) {
-			str = str.substring(0, index) + " " + str.substring(index + 1);
-		}
-		str += "]";
-		return str;
-	}
+	
 
 	/**
 	 * Default constructor.
 	 */
 	public Log() {
-		this.mTimeStamp = "";
-		this.mFormattedLog = "";
-		this.mPerLineCharacterCountLimit = DEFAULT_CHARACTER_PER_LINE_COUNT;
-		this.mLogType = DEFAULT_LOG_TYPE;
+		mLogHeader = new LogHeader();
+		mFormattedLog = "";
+		mPerLineCharacterCountLimit = DEFAULT_CHARACTER_PER_LINE_COUNT;
+		mLogHeader.setLogType(DEFAULT_LOG_TYPE);
+		mLogTimeFlag = true;
 	}
 
 	/**
-	 * Constructor. Timestamp set true as default.
+	 * Constructor.
 	 * 
-	 * @param log The object to be logged.
+	 * @param log     The object to be logged
+	 * @param logTime True if the log should contain a date time stamp.
 	 */
 	public Log(T log) {
-		this(log, DEFAULT_LOG_TIME);
-
-	}
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param log     The object to be logged
-	 * @param logTime True if the log should contain a date time stamp.
-	 */
-	public Log(T log, boolean logTime) {
 		this();
 		Util.checkNullArgumentAndThrow(log);
-		this.mLoggedObject = log;
-		if (logTime) {
-			this.mTimeStamp = getFormatedDateTime();
-			this.mTimeStampCharacterCount = this.mTimeStamp.length();
+		mLoggedObject = log;
+		if (mLogTimeFlag) {
+			String timeStamp = LogTime.getFormatedDateTime();
+			mLogHeader.getLogTime().setTimeStamp(timeStamp);
 		}
-		this.checkPunctiation();
-		this.formatLog();
+		checkPunctiation();
+		formatLog();
 	}
-	
+
 	/**
 	 * Constructor.
 	 * 
 	 * @param log     The object to be logged
 	 * @param logTime True if the log should contain a date time stamp.
 	 */
-	public Log(T log, boolean logTime, LogType logType) {
-		this(log,logTime);
-		this.mLogType = logType;
+	public Log(T log, LogType logType) {
+		this(log);
+		mLogHeader.setLogType(logType);
 	}
 
 	/*
-	 * Checks if log has punctuation towards the end of the line so it does not cut off punctuation to the following line.
+	 * Checks if log has punctuation towards the end of the line so it does not cut
+	 * off punctuation to the following line.
 	 */
 	private void checkPunctiation() {
 		// Do not need to check null as there is no setter and null checks happen at
 		// constructions.
-		String logContents = this.mLoggedObject.toString();
+		String logContents = mLoggedObject.toString();
 		if (logContents != null) {
 			char[] punctiationSet = { ',', '?', '!' };
 			boolean flag = false;
@@ -117,7 +98,7 @@ public class Log<T> {
 					}
 				}
 			}
-			this.hasPunctuation = flag;
+			hasPunctuation = flag;
 		}
 	}
 
@@ -125,65 +106,68 @@ public class Log<T> {
 	 * Formats log into a formatted string format.
 	 */
 	private void formatLog() {
-		String[] lines = this.formatLogsIntoLines();
+		String[] lines = formatLogsIntoLines();
 		if (lines != null) {
 			for (String str : lines) {
 				System.out.println(String.valueOf(str));
-				this.mFormattedLog += "\n".concat(str);
+				mFormattedLog += "\n".concat(str);
 			}
 		} else {
-			this.mFormattedLog = this.getEntireLogAsString();
+			mFormattedLog = getFormattedLog();
 		}
 	}
 
 	/**
 	 * Formats logs into formated lines that can be used for various purpose.
 	 * Example: formated lines for logging to a file.
+	 * 
 	 * @return
 	 */
 	public String[] formatLogsIntoLines() {
 		String[] result = null;
-		String logContents = this.getLogBodyAsString();
-		//check if log is going to be multiple lines.
-		if (logContents.length() > this.mPerLineCharacterCountLimit) {
+		String logContents = getFormattedBody();
+		// check if log is going to be multiple lines.
+		if (logContents.length() > mPerLineCharacterCountLimit) {
 			Vector<String> workingResult = new Vector<>();
 			boolean flag = false;
-			while (logContents.length() > this.mPerLineCharacterCountLimit) {
-				String limit = flag == true ? generateSpaces(this.mTimeStampCharacterCount) : this.getLogHeaderAsString();
-				String content = logContents.substring(0, this.mPerLineCharacterCountLimit);
+			while (logContents.length() > mPerLineCharacterCountLimit) {
+				String limit = flag == true ? generateSpaces(mLogHeader.getLogTime().getCharacterCount())
+						: getFormattedHeader();
+				String content = logContents.substring(0, mPerLineCharacterCountLimit);
 				int parseIndex = -1;
 				// find last whitespace so word do not cut off or wrap.
 				int index = content.lastIndexOf(" ");
 				if (index >= 0) {
 					content = content.substring(0, index);
-					parseIndex = index; 
+					parseIndex = index;
 				}
 				workingResult.add(limit + content);
 				logContents = parseIndex != -1 ? logContents.substring(parseIndex)
-						: logContents.substring(0, this.mPerLineCharacterCountLimit);
+						: logContents.substring(0, mPerLineCharacterCountLimit);
 				if (!flag) {
 					flag = true;
 				}
 			}
 			if (logContents.length() > 0) {
 				if (flag) {
-					workingResult.add(generateSpaces(this.mTimeStampCharacterCount) + logContents);
+					workingResult.add(generateSpaces(mLogHeader.getLogTime().getCharacterCount()) + logContents);
 				} else {
 					workingResult.add(logContents);
 				}
 			}
 			result = workingResult.toArray(new String[0]);
-			
+
 		} else {
 			result = new String[1];
-			result[0] = this.getLogHeaderAsString() + logContents;
+			result[0] = getFormattedHeader() + logContents;
 		}
-		
+
 		return result;
 	}
 
 	/**
 	 * Generates a space in string format.
+	 * 
 	 * @param count
 	 * @return Space
 	 */
@@ -204,11 +188,31 @@ public class Log<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public T getLog() {
-		return (T) this.mLoggedObject;
+		return (T) mLoggedObject;
 	}
-	
+
+	/**
+	 * 
+	 * @return
+	 */
+	public LogTime getLogTime() {
+		return mLogHeader != null ? mLogHeader.getLogTime() : null;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public LogHeader getLogHeader() {
+		return mLogHeader;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public LogType getLogType() {
-		return this.mLogType;
+		return mLogHeader.getLogType();
 	}
 
 	/**
@@ -216,7 +220,7 @@ public class Log<T> {
 	 * @return
 	 */
 	public String getFormattedLog() {
-		return this.mFormattedLog;
+		return mFormattedLog;
 	}
 
 	/**
@@ -225,8 +229,8 @@ public class Log<T> {
 	 * @return Log header.
 	 *
 	 */
-	public String getLogHeaderAsString() {
-		return this.mTimeStamp;
+	public String getFormattedHeader() {
+		return mLogHeader.getFormattedHeader();
 	}
 
 	/**
@@ -235,17 +239,8 @@ public class Log<T> {
 	 * @return String representation of the object accosiated with this log.
 	 *
 	 */
-	public String getLogBodyAsString() {
-		return " " + this.mLoggedObject.toString();
-	}
-
-	/**
-	 * 
-	 * @return String representation of the log.
-	 *
-	 */
-	public String getEntireLogAsString() {
-		return this.getLogHeaderAsString() + this.getLogBodyAsString();
+	public String getFormattedBody() {
+		return " " + mLoggedObject.toString();
 	}
 
 	/**
@@ -254,11 +249,9 @@ public class Log<T> {
 	 */
 	@Override
 	public String toString() {
-		return "\nLog [mLogType=" + mLogType + ", mPerLineCharacterCountLimit=" + mPerLineCharacterCountLimit
-				+ "\nmLoggedObject=" + mLoggedObject + ", mFormattedLog=" + mFormattedLog + ", mTimeStamp=" + mTimeStamp
-				+ "\nmTimeStampCharacterCount=" + mTimeStampCharacterCount + ", hasPunctuation=" + hasPunctuation + "]";
+		return "Log [mLogHeader=" + mLogHeader + ", mPerLineCharacterCountLimit=" + mPerLineCharacterCountLimit
+				+ ", mLoggedObject=" + mLoggedObject + ", mFormattedLog=" + mFormattedLog + ", hasPunctuation="
+				+ hasPunctuation + ", mLogTimeFlag=" + mLogTimeFlag + "]";
 	}
-
-	
 
 }

@@ -84,7 +84,9 @@ public abstract class Logger {
 	 *
 	 */
 	public void log(String log, boolean logTime) {
-		this.log(new Log<String>(log,logTime));
+		Log<String> logObj = new Log(log);
+		logObj.getLog
+		this.log(new Log<String>(log));
 	}
 
 	/**
@@ -103,8 +105,6 @@ public abstract class Logger {
 	public abstract void log(Log<?> log);
 
 	
-
-	public abstract void logTime();
 
 	// public abstract void logLines(String[] lines);
 	/**
