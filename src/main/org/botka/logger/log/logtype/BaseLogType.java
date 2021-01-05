@@ -4,7 +4,7 @@
  * Date Created: Dec 7, 2020
  *
  */
-package main.org.botka.logger.logtype;
+package main.org.botka.logger.log.logtype;
 
 /**
  * @author Jake Botka

@@ -1,16 +1,16 @@
 /**
- * File Name: GeneralLogType.java
+ * File Name: ErrorLogType.java
  * Programmer: Jake Botka
  * Date Created: Dec 7, 2020
  *
  */
-package main.org.botka.logger.logtype;
+package main.org.botka.logger.log.logtype;
 
 /**
  * @author Jake Botka
  *
  */
-public class GeneralLogType extends BaseLogType {
+public class ErrorLogType extends BaseLogType {
 
 	/**
 	 * @return
@@ -19,7 +19,9 @@ public class GeneralLogType extends BaseLogType {
 	@Override
 	public String getLogTypeString() {
 
-		return "General";
+		return "Error";
 	}
+
+	
 
 }

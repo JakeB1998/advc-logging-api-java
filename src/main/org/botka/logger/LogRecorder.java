@@ -8,6 +8,8 @@ package main.org.botka.logger;
 
 import java.util.List;
 
+import main.org.botka.logger.log.Log;
+
 /**
  * Interface for recording logs.
  * @author Jake Botka

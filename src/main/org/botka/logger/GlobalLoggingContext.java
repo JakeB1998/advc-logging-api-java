@@ -13,7 +13,15 @@ package main.org.botka.logger;
  *
  */
 public class GlobalLoggingContext {
-	public static boolean globalLogging = false;
+	private static boolean globalLogging = false;
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static boolean isGlobalLogging() {
+		return globalLogging;
+	}
 	
 	/**
 	 * Set to false by default.

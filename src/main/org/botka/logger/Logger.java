@@ -23,8 +23,9 @@ import javax.annotation.Nullable;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import main.org.botka.logger.logtype.ActiveLogTypes;
-import main.org.botka.logger.logtype.LogType;
+import main.org.botka.logger.log.Log;
+import main.org.botka.logger.log.logtype.ActiveLogTypes;
+import main.org.botka.logger.log.logtype.LogType;
 import main.org.botka.utility.api.exceptions.NotImplementedYetException;
 
 
@@ -40,6 +41,7 @@ public abstract class Logger {
 	private ActiveLogTypes mActiveLogTypes;
 	private volatile boolean mError;
 	private String mErrorMessage;
+	
 	/**
 	 * Default Constructor.
 	 */
@@ -67,12 +69,22 @@ public abstract class Logger {
 		this.mLogRecorder = logRecorder;
 	}
 	
-	public void clearError() {
+	public abstract void log(Log<?> log);
+	
+	public abstract void logAll(Log<?>[] logs);
+	
+	/**
+	 * Clears error
+	 */
+	private void clearError() {
 		this.mError = false;
 		this.mErrorMessage = null;
 	}
 	
-
+	/**
+	 * 
+	 * @return True if error is present. Otherwise false.
+	 */
 	public boolean hasError() {
 		return this.mError;
 	}
@@ -81,36 +93,33 @@ public abstract class Logger {
 	 * 
 	 * @param log
 	 * @param logTime
-	 *
 	 */
 	public void log(String log, boolean logTime) {
 		Log<String> logObj = new Log(log);
-		logObj.getLog
 		this.log(new Log<String>(log));
 	}
 
 	/**
 	 * 
 	 * @param log
-	 *
 	 */
 	public void log(String log) {
 		this.log(new Log<String>(log));
 	}
 	
+	/**
+	 * 
+	 * @param <T>
+	 * @param log
+	 */
 	public<T> void log(T log) {
 		this.log(new Log<T>(log));
 	}
 
-	public abstract void log(Log<?> log);
-
 	
-
-	// public abstract void logLines(String[] lines);
 	/**
 	 * 
 	 * @param logs
-	 *
 	 */
 	public void logAll(String[] logs) {
 		if (logs != null) {
@@ -121,7 +130,7 @@ public abstract class Logger {
 		}
 	}
 
-	public abstract void logAll(Log<?>[] logs);
+	
 
 	
 	/**
@@ -132,6 +141,10 @@ public abstract class Logger {
 		this.mErrorMessage = errorMessage;
 	}
 	
+	/**
+	 * 
+	 * @param logType Log type.
+	 */
 	public void setLogType(@Nullable LogType logType) {
 		if (logType == null) {
 			this.mActiveLogTypes.clearSet();
@@ -155,6 +168,10 @@ public abstract class Logger {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param logTypes
+	 */
 	public void setActiveLogTypes(@Nullable Collection<LogType> logTypes) {
 		if (logTypes == null) {
 			this.setLogType(null);
@@ -162,7 +179,6 @@ public abstract class Logger {
 			this.mActiveLogTypes.setActiveLogTypes(logTypes.toArray(new LogType[0]));
 		}
 	}
-	
 	
 	
 	/**
@@ -190,22 +206,41 @@ public abstract class Logger {
 	 * @author Jake Botka
 	 *
 	 */
-	public static class Console{
+	public static class Console {
+		
+		/**
+		 * 
+		 * @param message
+		 */
 		public static void log(String message) {
 			log(null, message, false);
-			
 		}
 
+		/**
+		 * 
+		 * @param message
+		 * @param logTime
+		 */
 		public static void log(String message, boolean logTime) {
 			log(null, message, logTime);
 		}
 
+		/**
+		 * 
+		 * @param c
+		 * @param message
+		 */
 		public static void log(Class<?> c, String message) {
 			log(c, message, false);
 		}
 
+		/**
+		 * 
+		 * @param c
+		 * @param message
+		 * @param logTime
+		 */
 		public static void log(Class<?> c, String message, boolean logTime) {
-
 			String log = "";
 			if (logTime)
 				log += LocalTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);
@@ -213,7 +248,6 @@ public abstract class Logger {
 				log += c.getName() + ": \t";
 			if (message != null)
 				log += message;
-
 			System.out.println(log);
 		}
 	}

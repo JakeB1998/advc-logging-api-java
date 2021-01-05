@@ -11,6 +11,8 @@ import java.util.Vector;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import main.org.botka.logger.log.Log;
+
 /**
  * Implementation of ILogRecorder interface that records logs to a data
  * structure.

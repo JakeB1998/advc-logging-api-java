@@ -4,9 +4,9 @@
  * Date Created: Jan 4, 2021
  *
  */
-package main.org.botka.logger;
+package main.org.botka.logger.log;
 
-import main.org.botka.logger.logtype.LogType;
+import main.org.botka.logger.log.logtype.LogType;
 
 /**'Header of a log. Ussualy defining variables such as time.
  * @author Jake Botka

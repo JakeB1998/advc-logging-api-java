@@ -1,16 +1,16 @@
 /**
- * File Name: AllLogType.java
+ * File Name: GeneralLogType.java
  * Programmer: Jake Botka
  * Date Created: Dec 7, 2020
  *
  */
-package main.org.botka.logger.logtype;
+package main.org.botka.logger.log.logtype;
 
 /**
  * @author Jake Botka
  *
  */
-public class AllLogType extends BaseLogType {
+public class GeneralLogType extends BaseLogType {
 
 	/**
 	 * @return
@@ -18,9 +18,8 @@ public class AllLogType extends BaseLogType {
 	 */
 	@Override
 	public String getLogTypeString() {
-		return "All";
-	}
 
-	
+		return "General";
+	}
 
 }

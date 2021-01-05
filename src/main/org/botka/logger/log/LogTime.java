@@ -4,7 +4,7 @@
  * Date Created: Jan 4, 2021
  *
  */
-package main.org.botka.logger;
+package main.org.botka.logger.log;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +18,7 @@ public class LogTime {
 	public static final DateTimeFormatter DEFAULT_DATE_TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 	private String mTimeStamp;
 	private int mTimeStampCharacterCount;
+	private boolean mFormatted;
 	
 	/**
 	 * Fromats a DateTime object into a string. Uses default formatting "ISO_LOCAL_DATE_TIME"
@@ -63,6 +64,14 @@ public class LogTime {
 		if (mTimeStamp != null) {
 			mTimeStampCharacterCount = mTimeStamp.length();
 		}
+	}
+	
+	/**
+	 * 
+	 * @return True if timestamp is formatted. Otherwise false.
+	 */
+	public boolean isFormatted() {
+		return mFormatted;
 	}
 	
 	/**

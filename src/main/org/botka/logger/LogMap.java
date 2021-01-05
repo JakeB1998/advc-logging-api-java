@@ -8,6 +8,8 @@ package main.org.botka.logger;
 
 import java.util.HashMap;
 
+import main.org.botka.logger.log.Log;
+
 /**
  * @author Jake Botka
  *

@@ -6,6 +6,8 @@
  */
 package main.org.botka.logger;
 
+import main.org.botka.logger.log.Log;
+
 /**
  * @author Jake Botka
  *

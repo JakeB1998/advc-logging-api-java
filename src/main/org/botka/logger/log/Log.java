@@ -4,7 +4,7 @@
  * Oct 25, 2020
  *
  */
-package main.org.botka.logger;
+package main.org.botka.logger.log;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,7 +15,7 @@ import java.util.Vector;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import main.org.botka.logger.logtype.LogType;
+import main.org.botka.logger.log.logtype.LogType;
 import main.org.botka.utility.api.util.Util;
 
 /**
@@ -28,6 +28,7 @@ public class Log<T> {
 	public static final LogType DEFAULT_LOG_TYPE = LogType.GENERAL;
 
 	private LogHeader mLogHeader;
+	private LogBody mLogBody;
 	private int mPerLineCharacterCountLimit;
 	private Object mLoggedObject;
 	private String mFormattedLog;
@@ -41,6 +42,7 @@ public class Log<T> {
 	 */
 	public Log() {
 		mLogHeader = new LogHeader();
+		mLogBody = new LogBody(null);
 		mFormattedLog = "";
 		mPerLineCharacterCountLimit = DEFAULT_CHARACTER_PER_LINE_COUNT;
 		mLogHeader.setLogType(DEFAULT_LOG_TYPE);
@@ -62,7 +64,7 @@ public class Log<T> {
 			mLogHeader.getLogTime().setTimeStamp(timeStamp);
 		}
 		checkPunctiation();
-		formatLog();
+		mLogBody.setBodyContent(formatLog());
 	}
 
 	/**
@@ -105,16 +107,19 @@ public class Log<T> {
 	/**
 	 * Formats log into a formatted string format.
 	 */
-	private void formatLog() {
+	private String formatLog() {
 		String[] lines = formatLogsIntoLines();
 		if (lines != null) {
 			for (String str : lines) {
 				System.out.println(String.valueOf(str));
 				mFormattedLog += "\n".concat(str);
 			}
+			return mFormattedLog;
 		} else {
 			mFormattedLog = getFormattedLog();
+			return mFormattedLog;
 		}
+		
 	}
 
 	/**
@@ -205,6 +210,10 @@ public class Log<T> {
 	 */
 	public LogHeader getLogHeader() {
 		return mLogHeader;
+	}
+	
+	public LogBody getLogBody() {
+		return mLogBody;
 	}
 
 	/**

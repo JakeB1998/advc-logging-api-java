@@ -1,16 +1,16 @@
 /**
- * File Name: ErrorLogType.java
+ * File Name: AllLogType.java
  * Programmer: Jake Botka
  * Date Created: Dec 7, 2020
  *
  */
-package main.org.botka.logger.logtype;
+package main.org.botka.logger.log.logtype;
 
 /**
  * @author Jake Botka
  *
  */
-public class ErrorLogType extends BaseLogType {
+public class AllLogType extends BaseLogType {
 
 	/**
 	 * @return
@@ -18,8 +18,7 @@ public class ErrorLogType extends BaseLogType {
 	 */
 	@Override
 	public String getLogTypeString() {
-
-		return "Error";
+		return "All";
 	}
 
 	

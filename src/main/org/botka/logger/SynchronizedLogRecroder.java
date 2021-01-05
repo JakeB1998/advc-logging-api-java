@@ -14,6 +14,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import main.org.botka.logger.log.Log;
+
 /**
  * Interface for Syncronized log recording.
  * 
