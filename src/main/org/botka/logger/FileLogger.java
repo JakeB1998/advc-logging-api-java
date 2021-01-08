@@ -12,26 +12,30 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+
 import com.google.common.io.Files;
 
 import main.org.botka.logger.log.Log;
+import main.org.botka.logger.log.LogTime;
+import main.org.botka.utility.api.base.FileWriteMode;
 import main.org.botka.utility.api.util.Util;
 
 
 public class FileLogger extends BaseLogger {
+	public static final FileWriteMode FILE_WRITE_MODE_DEFAULT = FileWriteMode.Append;
+	public static final boolean TIME_STAMP_PERM_DEFAULT = false;
+	private FileWriteMode mFileWriteMode;
 	private File mLoggerFile;
 	private BufferedWriter mBufferedWriter;
 	private FileWriter mFileWriter;
 	private FilterReader mFileReader;
 	
 	private int mCurrentLine;
-	
-
-	private DateTimeFormatter mTimeFormat;
-
 	private boolean mTimeStamps;
 
-	
+	/**
+	 * Constructor.
+	 */
 	public FileLogger() {
 		super();
 		this.mLoggerFile = null;
@@ -49,6 +53,25 @@ public class FileLogger extends BaseLogger {
 		this(file,true,false);
 		
 	}
+	
+	/**
+	 * 
+	 * @param file
+	 * @param fileWriteMode
+	 */
+	public FileLogger(File file, FileWriteMode fileWriteMode) {
+		this(file, fileWriteMode,TIME_STAMP_PERM_DEFAULT);
+	}
+	
+	/**
+	 * 
+	 * @param file
+	 * @param fileWriteMode
+	 * @param timeStamps
+	 */
+	public FileLogger(File file, FileWriteMode fileWriteMode, boolean timeStamps) {
+		this(file, timeStamps, FILE_WRITE_MODE_DEFAULT.toString().equals(FileWriteMode.Overwrite.toString()));
+	}
 
 	/**
 	 * Constructor
@@ -57,12 +80,11 @@ public class FileLogger extends BaseLogger {
 	 * @param timeStamps True if Time should be logged
 	 */
 	public FileLogger(File file, boolean timeStamps) {
-		this(file,timeStamps,false);
-		
+		this(file,timeStamps, FILE_WRITE_MODE_DEFAULT.toString().equals(FileWriteMode.Overwrite.toString()));
 	}
 
 	/**
-	 * Constructor
+	 * Main constructor.
 	 * 
 	 * @param file       File to be logged to
 	 * @param timeStamps True if time should be logged
@@ -70,30 +92,31 @@ public class FileLogger extends BaseLogger {
 	 */
 	public FileLogger(File file, boolean timeStamps, boolean clearDoc) {
 		this();
-		
 		this.init(file, clearDoc);
 		this.mTimeStamps = timeStamps;
-
 	}
 
-	
-	public FileLogger(String filePath) {
-		this(new File(filePath));
+	/**
+	 * 
+	 * @param filePath
+	 */
+	public FileLogger(String path) {
+		this(path, TIME_STAMP_PERM_DEFAULT);
 	}
 	
 	/**
 	 * 
-	 * @param path
+	 * @param path path to the file.
 	 * @param timeStamps
 	 */
 	public FileLogger(String path, boolean timeStamps) {
-		this(path);
+		this(path, TIME_STAMP_PERM_DEFAULT, FILE_WRITE_MODE_DEFAULT.toString().equals(FileWriteMode.Overwrite.toString()));
 		this.mTimeStamps = timeStamps;
 	}
 
 	/**
 	 * 
-	 * @param path
+	 * @param path File path.
 	 * @param timeStamps
 	 */
 	public FileLogger(String path, boolean timeStamps, boolean clearDoc) {
@@ -143,21 +166,9 @@ public class FileLogger extends BaseLogger {
 		}
 	}
 
-	/**
-	 * Logs time to the current line
-	 */
-	public void logTime() {
-		this.logTime(Log.DEFAULT_DATE_TIME_FORMAT);
-	}
+	
 
-	/**
-	 * @param format
-	 */
-	public void logTime(DateTimeFormatter format) {
-		String time =  Log.getFormatedDateTime();
-		
-		this.logToCurrentLine(time);
-	}
+	
 
 	/**
 	 * writes string to file
@@ -166,68 +177,41 @@ public class FileLogger extends BaseLogger {
 	 */
 	@Override
 	public void log(String str) {
-		this.log(new Log<>(str, this.mTimeStamps));
+		this.log(new Log<String>(str));
 	}
 
 	
 	/**
-	 *  writes string to file. The create new line.
-	 *  Detects "\n" in the string which then creating a new line.
 	 * 
-	 * @param str String to be logged
+	 * @param log
+	 *
 	 */
 	@Override
-	public void log(String log, boolean logTime) {
-		Util.checkNullArgumentAndThrow(log);
-		if (logTime)
-			this.logTime();
-		while (log.contains("\n")) {
-			int index = log.indexOf("\n");
-			if (index != -1) {
-				String x = log.substring(0, log.indexOf("\n"));
-				this.write(x);
-				this.newLine();
-				
-				if (log.length() > 2)
-					if (index + 2 >= log.length()) {
-						this.newLine();
-						break;
-					}
-					else
-						log = log.substring(index + 2);
-			}
-		}
-		if (!log.endsWith("\n")) {
-			this.write(log);
-			this.newLine();
-		}
-	}
-	
-	@Override
 	public void log(Log<?> log) {
-		Util.checkNullArgumentAndThrow(log);
 		LogRecorder recorder = super.getLogRecorder();
 		if (recorder != null) {
 			recorder.recordLog(log);
 		}
-		this.logString(log.getFormattedLog());
+		write(log.getFormattedLog());
 	}
 	
-
+	/**
+	 * 
+	 * @param logs
+	 *
+	 */
 	@Override
 	public void logAll(Log<?>[] logs) {
-		Util.checkNullArgumentAndThrow(logs);
-		// "Log array provided is null"
-		
-		for (Log<?> log : logs) {
-			this.log(log);
+		if (logs != null) {
+			for (Log<?> log : logs) {
+				log(log);
+			}
 		}
 		
 	}
 
-	private void logString(String str) {
-		this.log(str,false);
-	}
+	
+	
 	/**
 	 * Writes string to same line
 	 * 
@@ -242,16 +226,30 @@ public class FileLogger extends BaseLogger {
 	 * 
 	 * @param lines An array of logs formated in lines
 	 */
-	
 	public void logLines(String[] lines) {
 		this.logLines(lines,this.mTimeStamps);
 	}
 	
-	public void logLines(@NonNull String[] lines, boolean timeStamps) {
-		Util.checkNullArgumentAndThrow(lines);
-		if (lines != null)
-			for (String line : lines)
-				this.log(line, timeStamps);
+	/**
+	 * 
+	 * @param lines
+	 * @param timeStamps
+	 */
+	public void logLines( String[] lines, boolean timeStamps) {
+		String header = "";
+		if (timeStamps) {
+			header = "[" + LogTime.getFormatedDateTime() + "] ";
+		}
+		
+		if (lines != null) {
+			for (String line : lines) {
+				if (line == null) {
+					line = "Null";
+				}
+				write(header + line);
+			}
+		}
+				
 	}
 
 	/**
@@ -285,37 +283,56 @@ public class FileLogger extends BaseLogger {
 	 * @param content Content to be written to the file.
 	 */
 	private void write(String content) {
-		if (this.mBufferedWriter != null) {
+		
+		boolean errorFlag = false;
+		boolean writePermissions = false;
+		//Error check one. Checks files context.
+		if (!mLoggerFile.exists()) {
 			try {
-				this.mBufferedWriter.write(content);
-				this.mBufferedWriter.flush();
+				if (!mLoggerFile.createNewFile()) {
+					errorFlag = true;
+				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				errorFlag = true;
+			}
+		}
+		//Error check Two. Checks permissions.
+		if (!errorFlag) {
+			if (mLoggerFile.canWrite()) {
+				writePermissions = true;
+			} else {
+				System.err.println("File does not have write permissions");
+			}
+		} else {
+			System.err.println("File was not found and could not be created");
+		}
+		//Main function.
+		if (errorFlag == false && writePermissions == true) {
+			if (this.mBufferedWriter != null) {
+				try {
+					
+					this.mBufferedWriter.write(content);
+					this.mBufferedWriter.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				
 			}
 		}
 	}
 
 
-	
+	/**
+	 * Get the file that is being logged to.
+	 * @return file that the current logger is logging to.
+	 */
 	public File getFile() {
 		return this.mLoggerFile;
 	}
-	/**
-	 * 
-	 * @return Format object
-	 */
-	public DateTimeFormatter getTimeFormat() {
-		return mTimeFormat;
-	}
-
-	/**
-	 * 
-	 * @param mTimeFormat Format object
-	 */
-	public void setTimeFormat(DateTimeFormatter mTimeFormat) {
-		this.mTimeFormat = mTimeFormat;
-	}
+	
+	
 	
 	/**
 	 * 

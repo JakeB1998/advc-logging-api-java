@@ -89,15 +89,7 @@ public abstract class Logger {
 		return this.mError;
 	}
 
-	/**
-	 * 
-	 * @param log
-	 * @param logTime
-	 */
-	public void log(String log, boolean logTime) {
-		Log<String> logObj = new Log(log);
-		this.log(new Log<String>(log));
-	}
+	
 
 	/**
 	 * 
@@ -207,10 +199,10 @@ public abstract class Logger {
 	 *
 	 */
 	public static class Console {
-		
+		public static final Class<?> DEFAULT_LOG_CLASS = Console.class;
 		/**
 		 * 
-		 * @param message
+		 * @param message Log message.
 		 */
 		public static void log(String message) {
 			log(null, message, false);
@@ -219,7 +211,7 @@ public abstract class Logger {
 		/**
 		 * 
 		 * @param message
-		 * @param logTime
+		 * @param logTime True if time is to be logged in header.
 		 */
 		public static void log(String message, boolean logTime) {
 			log(null, message, logTime);
@@ -227,8 +219,8 @@ public abstract class Logger {
 
 		/**
 		 * 
-		 * @param c
-		 * @param message
+		 * @param c Source class of the log.
+		 * @param message Log message.
 		 */
 		public static void log(Class<?> c, String message) {
 			log(c, message, false);
@@ -236,16 +228,20 @@ public abstract class Logger {
 
 		/**
 		 * 
-		 * @param c
-		 * @param message
-		 * @param logTime
+		 * @param c Source class of the log.
+		 * @param message Log message.
+		 * @param logTime True if time is to be logged in header.
 		 */
 		public static void log(Class<?> c, String message, boolean logTime) {
-			String log = "";
+			String log = "[";
 			if (logTime)
 				log += LocalTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);
 			if (c != null)
 				log += c.getName() + ": \t";
+			else {
+				log += DEFAULT_LOG_CLASS.getName();
+			}
+			log += "] ";
 			if (message != null)
 				log += message;
 			System.out.println(log);

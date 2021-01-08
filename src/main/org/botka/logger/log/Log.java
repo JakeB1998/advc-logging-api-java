@@ -13,18 +13,22 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.TemporalField;
 import java.util.Vector;
 
+import javax.annotation.Nonnull;
+
 import org.eclipse.jdt.annotation.NonNull;
 
 import main.org.botka.logger.log.logtype.LogType;
 import main.org.botka.utility.api.util.Util;
 
 /**
+ * Log class that represents information directly related to the log. proccessed logs will be wrapped with the LogContext.java class
+ * @see LogContext.java.
  * @author Jake Botka Class represents a log that contains a header and a body.
  */
 public class Log<T> {
 	
 	public static final boolean DEFAULT_LOG_TIME = true;
-	public static final int DEFAULT_CHARACTER_PER_LINE_COUNT = 100;
+	public static final int DEFAULT_CHARACTER_PER_LINE_COUNT = 150;
 	public static final LogType DEFAULT_LOG_TYPE = LogType.GENERAL;
 
 	private LogHeader mLogHeader;
@@ -55,16 +59,8 @@ public class Log<T> {
 	 * @param log     The object to be logged
 	 * @param logTime True if the log should contain a date time stamp.
 	 */
-	public Log(T log) {
-		this();
-		Util.checkNullArgumentAndThrow(log);
-		mLoggedObject = log;
-		if (mLogTimeFlag) {
-			String timeStamp = LogTime.getFormatedDateTime();
-			mLogHeader.getLogTime().setTimeStamp(timeStamp);
-		}
-		checkPunctiation();
-		mLogBody.setBodyContent(formatLog());
+	public Log(@NonNull T log) {
+		this(log, LogType.GENERAL);
 	}
 
 	/**
@@ -73,9 +69,21 @@ public class Log<T> {
 	 * @param log     The object to be logged
 	 * @param logTime True if the log should contain a date time stamp.
 	 */
-	public Log(T log, LogType logType) {
-		this(log);
+	public Log(@Nonnull T log, LogType logType) {
+		this();
 		mLogHeader.setLogType(logType);
+		Util.checkNullArgumentAndThrow(log);
+		mLoggedObject = log;
+		if (mLogTimeFlag) {
+			String timeStamp = LogTime.getFormatedDateTime();
+			if (mLogHeader.getLogTime() == null) {
+				mLogHeader.setLogTIme(new LogTime(timeStamp));
+			} else {
+				mLogHeader.getLogTime().setTimeStamp(timeStamp);
+			}
+		}
+		checkPunctiation();
+		mLogBody.setBodyContent(log.toString());
 	}
 
 	/*
@@ -126,7 +134,7 @@ public class Log<T> {
 	 * Formats logs into formated lines that can be used for various purpose.
 	 * Example: formated lines for logging to a file.
 	 * 
-	 * @return
+	 * @return Array of formatted lines for the log.
 	 */
 	public String[] formatLogsIntoLines() {
 		String[] result = null;
@@ -136,8 +144,8 @@ public class Log<T> {
 			Vector<String> workingResult = new Vector<>();
 			boolean flag = false;
 			while (logContents.length() > mPerLineCharacterCountLimit) {
-				String limit = flag == true ? generateSpaces(mLogHeader.getLogTime().getCharacterCount())
-						: getFormattedHeader();
+				//generateSpaces(mLogHeader.getLogTime().getCharacterCount())
+				String limit = flag == true ? "" : getFormattedHeader();
 				String content = logContents.substring(0, mPerLineCharacterCountLimit);
 				int parseIndex = -1;
 				// find last whitespace so word do not cut off or wrap.
@@ -173,8 +181,8 @@ public class Log<T> {
 	/**
 	 * Generates a space in string format.
 	 * 
-	 * @param count
-	 * @return Space
+	 * @param count number of spcaes.
+	 * @return String full of white spaces with the length equal to {@code count}.
 	 */
 	public String generateSpaces(int count) {
 		String spaces = "";
@@ -212,6 +220,10 @@ public class Log<T> {
 		return mLogHeader;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public LogBody getLogBody() {
 		return mLogBody;
 	}
@@ -229,7 +241,7 @@ public class Log<T> {
 	 * @return
 	 */
 	public String getFormattedLog() {
-		return mFormattedLog;
+		return formatLog();
 	}
 
 	/**

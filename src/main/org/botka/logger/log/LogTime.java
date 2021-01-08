@@ -28,13 +28,12 @@ public class LogTime {
 	 */
 	public static String formatDateTime(LocalDateTime dateTime) {
 		if (dateTime != null) {
-			String str = "[";
+			String str = "";
 			str += dateTime.format(DEFAULT_DATE_TIME_FORMAT);
 			int index = str.indexOf("T");
 			if (index != -1 && index + 1 <= str.length()) {
 				str = str.substring(0, index) + " " + str.substring(index + 1);
 			}
-			str += "]";
 			return str;
 		}
 		return null;
