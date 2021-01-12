@@ -96,7 +96,7 @@ public abstract class Logger {
 	 * @param log
 	 */
 	public void log(String log) {
-		this.log(new Log<String>(log));
+		this.log(new Log<String>(log, System.currentTimeMillis()));
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public abstract class Logger {
 	 * @param log
 	 */
 	public<T> void log(T log) {
-		this.log(new Log<T>(log));
+		this.log(new Log<T>(log, System.currentTimeMillis()));
 	}
 
 	
@@ -117,7 +117,7 @@ public abstract class Logger {
 		if (logs != null) {
 			Log<String>[] logArray = new Log[logs.length];
 			for (int i = 0; i < logs.length; i++) {
-				logArray[i] = new Log<String>(logs[i]);
+				logArray[i] = new Log<String>(logs[i], System.currentTimeMillis());
 			}
 		}
 	}

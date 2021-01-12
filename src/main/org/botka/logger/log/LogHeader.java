@@ -6,6 +6,8 @@
  */
 package main.org.botka.logger.log;
 
+import java.time.LocalDateTime;
+
 import main.org.botka.logger.log.logtype.LogType;
 
 /**'Header of a log. Ussualy defining variables such as time.
@@ -30,6 +32,23 @@ public class LogHeader {
 		mLogType = null;
 	}
 	
+	public LogHeader(LogTime logTime) {
+		this(logTime, null);
+	}
+	
+	public LogHeader(LogTime logTime, String logTag) {
+		mLogTime = logTime;
+		mLogTag = new LogTag(logTag);
+	}
+	
+	public LogHeader(long epocTime, String logTag) {
+		this (new LogTime(epocTime), logTag);
+	}
+	
+	public LogHeader(LocalDateTime localDateTime, String logTag) {
+		this(new LogTime(localDateTime), logTag);
+	}
+	
 	/**
 	 * Formats headers.
 	 * @return Formatted header as a string
@@ -41,7 +60,7 @@ public class LogHeader {
 			strBuilder.append("[");
 			String holder = null;
 			if (mLogTime != null) {
-				holder = mLogTime.getTimeStamp();
+				holder = mLogTime.getFormattedTimeStamp();
 				if (holder != null || mLogNulls) {
 					firstFlag = handleFirstFlag(firstFlag, strBuilder);
 					strBuilder.append( String.valueOf(holder));
@@ -108,6 +127,21 @@ public class LogHeader {
 	}
 	
 	/**
+	 * 
+	 * @param logType
+	 */
+	public void setLogType(LogType logType) {
+		if (logType != null && mLogTime != null) {
+			
+			if (mLogType != null && !mLogType.equals(logType)) {
+				mFormattedHeader = formatHeader();
+			}
+			
+		}
+		mLogType = logType;
+	}
+	
+	/**
 	 * Gets the header as a formatted string.
 	 * @return Formated header.
 	 */
@@ -118,18 +152,7 @@ public class LogHeader {
 		return  mFormattedHeader;
 	}
 	
-	/**
-	 * 
-	 * @param logType
-	 */
-	public void setLogType(LogType logType) {
-		if (logType != null && mLogTime != null) {
-			if (!mLogType.equals(logType)) {
-				mFormattedHeader = formatHeader();
-			}
-		}
-		mLogType = logType;
-	}
+	
 	
 	//Add log tag getters and setters.
 
@@ -139,6 +162,14 @@ public class LogHeader {
 	@Override
 	public String toString() {
 		return "LogHeader [mLogTime=" + mLogTime + ", mLogType=" + mLogType + "]";
+	}
+
+	/**
+	 * @param logTag
+	 */
+	public void setLogTag(LogTag logTag) {
+		mLogTag = logTag;
+
 	}
 	
 	

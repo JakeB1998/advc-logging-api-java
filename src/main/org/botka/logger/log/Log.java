@@ -36,7 +36,6 @@ public class Log<T> {
 	private int mPerLineCharacterCountLimit;
 	private Object mLoggedObject;
 	private String mFormattedLog;
-	private boolean hasPunctuation;
 	private boolean mLogTimeFlag;
 
 	
@@ -45,11 +44,10 @@ public class Log<T> {
 	 * Default constructor.
 	 */
 	public Log() {
-		mLogHeader = new LogHeader();
-		mLogBody = new LogBody(null);
+		mLogHeader = null;
+		mLogBody = null;
 		mFormattedLog = "";
 		mPerLineCharacterCountLimit = DEFAULT_CHARACTER_PER_LINE_COUNT;
-		mLogHeader.setLogType(DEFAULT_LOG_TYPE);
 		mLogTimeFlag = true;
 	}
 
@@ -59,8 +57,8 @@ public class Log<T> {
 	 * @param log     The object to be logged
 	 * @param logTime True if the log should contain a date time stamp.
 	 */
-	public Log(@NonNull T log) {
-		this(log, LogType.GENERAL);
+	public Log(@NonNull T log, long timeEpoc) {
+		this(log, timeEpoc, LogType.GENERAL);
 	}
 
 	/**
@@ -69,49 +67,39 @@ public class Log<T> {
 	 * @param log     The object to be logged
 	 * @param logTime True if the log should contain a date time stamp.
 	 */
-	public Log(@Nonnull T log, LogType logType) {
-		this();
-		mLogHeader.setLogType(logType);
-		Util.checkNullArgumentAndThrow(log);
-		mLoggedObject = log;
-		if (mLogTimeFlag) {
-			String timeStamp = LogTime.getFormatedDateTime();
-			if (mLogHeader.getLogTime() == null) {
-				mLogHeader.setLogTIme(new LogTime(timeStamp));
-			} else {
-				mLogHeader.getLogTime().setTimeStamp(timeStamp);
-			}
-		}
-		checkPunctiation();
-		mLogBody.setBodyContent(log.toString());
+	public Log(@Nonnull T log, long timeEpoc, LogType logType) {
+		this(log,timeEpoc, logType, null);
 	}
-
-	/*
-	 * Checks if log has punctuation towards the end of the line so it does not cut
-	 * off punctuation to the following line.
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param log     The object to be logged
+	 * @param logTime True if the log should contain a date time stamp.
 	 */
-	private void checkPunctiation() {
-		// Do not need to check null as there is no setter and null checks happen at
-		// constructions.
-		String logContents = mLoggedObject.toString();
-		if (logContents != null) {
-			char[] punctiationSet = { ',', '?', '!' };
-			boolean flag = false;
-			for (char c : logContents.toCharArray()) {
-				for (char punc : punctiationSet) {
-					if (punc == c) {
-						flag = true;
-						break;
-					}
-					if (flag) {
-						break;
-					}
-				}
-			}
-			hasPunctuation = flag;
-		}
+	public Log(@Nonnull T log, long timeEpoc, LogType logType, String logTag) {
+		this();
+		mLogHeader = new LogHeader(new LogTime(timeEpoc));
+		mLogHeader.setLogType(logType);
+		mLogHeader.setLogTag(new LogTag(logTag));
+		mLoggedObject = log;
+		mLogBody = new LogBody(log.toString());
+		
+	}
+	
+	/**
+	 * 
+	 * @param logHeader
+	 * @param logBody
+	 */
+	public Log(LogHeader logHeader, LogBody logBody) {
+		this();
+		mLogHeader = logHeader;
+		mLogBody = logBody;
+		
 	}
 
+	
 	/**
 	 * Formats log into a formatted string format.
 	 */
@@ -271,8 +259,7 @@ public class Log<T> {
 	@Override
 	public String toString() {
 		return "Log [mLogHeader=" + mLogHeader + ", mPerLineCharacterCountLimit=" + mPerLineCharacterCountLimit
-				+ ", mLoggedObject=" + mLoggedObject + ", mFormattedLog=" + mFormattedLog + ", hasPunctuation="
-				+ hasPunctuation + ", mLogTimeFlag=" + mLogTimeFlag + "]";
+				+ ", mLoggedObject=" + mLoggedObject + ", mFormattedLog=" + mFormattedLog  + ", mLogTimeFlag=" + mLogTimeFlag + "]";
 	}
 
 }

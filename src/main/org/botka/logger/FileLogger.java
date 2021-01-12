@@ -177,7 +177,7 @@ public class FileLogger extends BaseLogger {
 	 */
 	@Override
 	public void log(String str) {
-		this.log(new Log<String>(str));
+		this.log(new Log<String>(str, System.currentTimeMillis()));
 	}
 
 	
