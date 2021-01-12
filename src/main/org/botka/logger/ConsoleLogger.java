@@ -74,7 +74,7 @@ public class ConsoleLogger extends BaseLogger {
 	 * @param logTime log time permission.
 	 */
 	public void logString(String str, boolean logTime) {
-		Logger.Console.log(str, logTime);
+		Logger.Console.log(logTime, null, str);
 	}
 
 	

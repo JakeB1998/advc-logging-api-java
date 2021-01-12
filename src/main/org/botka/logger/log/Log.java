@@ -258,7 +258,7 @@ public class Log<T> {
 	 */
 	@Override
 	public String toString() {
-		return "Log [mLogHeader=" + mLogHeader + ", mPerLineCharacterCountLimit=" + mPerLineCharacterCountLimit
+		return "\nLog [mLogHeader=" + mLogHeader + ", mPerLineCharacterCountLimit=" + mPerLineCharacterCountLimit
 				+ ", mLoggedObject=" + mLoggedObject + ", mFormattedLog=" + mFormattedLog  + ", mLogTimeFlag=" + mLogTimeFlag + "]";
 	}
 

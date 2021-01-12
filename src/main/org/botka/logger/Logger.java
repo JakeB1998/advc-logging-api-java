@@ -200,12 +200,19 @@ public abstract class Logger {
 	 */
 	public static class Console {
 		public static final Class<?> DEFAULT_LOG_CLASS = Console.class;
+		
+		private static String handleSeperation(boolean firstItem) {
+			if (!firstItem) {
+				return ", ";
+			}
+			return "";
+		}
 		/**
 		 * 
 		 * @param message Log message.
 		 */
 		public static void log(String message) {
-			log(null, message, false);
+			log(true,message);
 		}
 
 		/**
@@ -213,8 +220,8 @@ public abstract class Logger {
 		 * @param message
 		 * @param logTime True if time is to be logged in header.
 		 */
-		public static void log(String message, boolean logTime) {
-			log(null, message, logTime);
+		public static void log(boolean logTime,String message) {
+			log(logTime, null, message);
 		}
 
 		/**
@@ -223,28 +230,94 @@ public abstract class Logger {
 		 * @param message Log message.
 		 */
 		public static void log(Class<?> c, String message) {
-			log(c, message, false);
+			log(true, c, message);
+		}
+
+		/**
+		 * @param logTime True if time is to be logged in header.
+		 * @param c Source class of the log.
+		 * @param message Log message.
+		 */
+		public static void log(boolean logTime, Class<?> c, String message) {
+			if (message != null) {
+				boolean firstFlag = true;
+				StringBuilder log = new StringBuilder("");
+				 log.append("[");
+				if (logTime) {
+					log.append(handleSeperation(firstFlag) + LocalTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME));
+					firstFlag = false;
+				}
+				if (c != null) {
+					log.append(handleSeperation(firstFlag) + c.getName());
+					firstFlag = false;
+				}
+				else {
+					log.append(handleSeperation(firstFlag) + DEFAULT_LOG_CLASS.getName());
+					firstFlag = false;
+				}
+				log.append("] ");
+				log.append(message);
+				System.out.println(log.toString());
+			} else {
+				logError(true, Logger.Console.class, "Param message was null thus the log was not conducted");
+			}
+		}
+		
+		
+		/**
+		 * 
+		 * @param message Log message.
+		 */
+		public static void logError(String message) {
+			logError(true,message);
+		}
+
+		/**
+		 * 
+		 * @param message
+		 * @param logTime True if time is to be logged in header.
+		 */
+		public static void logError(boolean logTime,String message) {
+			logError(logTime, null, message);
 		}
 
 		/**
 		 * 
 		 * @param c Source class of the log.
 		 * @param message Log message.
-		 * @param logTime True if time is to be logged in header.
 		 */
-		public static void log(Class<?> c, String message, boolean logTime) {
-			String log = "[";
-			if (logTime)
-				log += LocalTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);
-			if (c != null)
-				log += c.getName() + ": \t";
-			else {
-				log += DEFAULT_LOG_CLASS.getName();
+		public static void logError(Class<?> c, String message) {
+			logError(true, c, message);
+		}
+
+		/**
+		 * @param logTime True if time is to be logged in header.
+		 * @param c Source class of the log.
+		 * @param message Log message.
+		 */
+		public static void logError(boolean logTime, Class<?> c, String message) {
+			if (message != null) {
+				boolean firstFlag = true;
+				StringBuilder log = new StringBuilder("");
+				 log.append("[");
+				if (logTime) {
+					log.append(handleSeperation(firstFlag) + LocalTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME));
+					firstFlag = false;
+				}
+				if (c != null) {
+					log.append(handleSeperation(firstFlag) + c.getName());
+					firstFlag = false;
+				}
+				else {
+					log.append(handleSeperation(firstFlag) + DEFAULT_LOG_CLASS.getName());
+					firstFlag = false;
+				}
+				log.append("] ");
+				log.append(message);
+				System.err.println((log.toString()));
+			} else {
+				logError(true, Logger.Console.class, "Param message was null thus the log was not conducted");
 			}
-			log += "] ";
-			if (message != null)
-				log += message;
-			System.out.println(log);
 		}
 	}
 }
