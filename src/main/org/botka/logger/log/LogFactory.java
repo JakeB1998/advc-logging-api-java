@@ -17,13 +17,7 @@ public final class LogFactory {
 		
 	}
 	
-	public static <T> Log<T> createLog(T log){
-		return null;
-	}
 	
-	public static <T> Log<T> createLog(LogHeader logHeader, LogBody logBody){
-		return new Log<T>(logHeader,logBody);
-	}
 	
 	
 

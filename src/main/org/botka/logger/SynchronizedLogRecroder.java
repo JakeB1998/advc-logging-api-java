@@ -29,7 +29,7 @@ public interface SynchronizedLogRecroder extends LogRecorder {
 		return LOCK;
 	}
 
-	public default boolean blockingRecordLog(@NonNull Log<?> log) {
+	public default boolean blockingRecordLog(@NonNull Log log) {
 		WriteLock lock = null;
 		try {
 			lock = LOCK.writeLock();
@@ -48,7 +48,7 @@ public interface SynchronizedLogRecroder extends LogRecorder {
 		
 	}
 	
-	public default boolean blockingRecordLogs(@NonNull Log<?>[] logs) {
+	public default boolean blockingRecordLogs(@NonNull Log[] logs) {
 		Lock lock = null;
 		try {
 			lock = LOCK.writeLock();
@@ -63,7 +63,7 @@ public interface SynchronizedLogRecroder extends LogRecorder {
 		}
 	}
 	
-	public default boolean nonblockingRecordLog(@NonNull Log<?> log) {
+	public default boolean nonblockingRecordLog(@NonNull Log log) {
 		if (!LOCK.isWriteLocked()) {
 			Lock lock = null;
 			try {
@@ -84,7 +84,7 @@ public interface SynchronizedLogRecroder extends LogRecorder {
 
 
 	
-	default boolean nonblockingRecordLogs(@NonNull Log<?>[] logs) {
+	default boolean nonblockingRecordLogs(@NonNull Log[] logs) {
 		if (!LOCK.isWriteLocked()) {
 			Lock lock = null;
 			try {
@@ -102,7 +102,8 @@ public interface SynchronizedLogRecroder extends LogRecorder {
 		return false;
 	}
 	
-	default List<Log<?>> getSyncrhonizedLogs(){
+	/**
+	default List<Log> getSyncrhonizedLogs(){
 		Lock lock = null;
 		try {
 			lock = LOCK.readLock();
@@ -116,6 +117,7 @@ public interface SynchronizedLogRecroder extends LogRecorder {
 		} 
 		return null;
 	}
+	**/
 
 	
 	

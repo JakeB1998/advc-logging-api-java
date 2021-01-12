@@ -25,7 +25,7 @@ import main.org.botka.utility.api.util.Util;
  * @see LogContext.java.
  * @author Jake Botka Class represents a log that contains a header and a body.
  */
-public class Log<T> {
+public class Log {
 	
 	public static final boolean DEFAULT_LOG_TIME = true;
 	public static final int DEFAULT_CHARACTER_PER_LINE_COUNT = 150;
@@ -34,8 +34,6 @@ public class Log<T> {
 	private LogHeader mLogHeader;
 	private LogBody mLogBody;
 	private int mPerLineCharacterCountLimit;
-	private Object mLoggedObject;
-	private String mFormattedLog;
 	private boolean mLogTimeFlag;
 
 	
@@ -46,7 +44,6 @@ public class Log<T> {
 	public Log() {
 		mLogHeader = null;
 		mLogBody = null;
-		mFormattedLog = "";
 		mPerLineCharacterCountLimit = DEFAULT_CHARACTER_PER_LINE_COUNT;
 		mLogTimeFlag = true;
 	}
@@ -57,7 +54,7 @@ public class Log<T> {
 	 * @param log     The object to be logged
 	 * @param logTime True if the log should contain a date time stamp.
 	 */
-	public Log(@NonNull T log, long timeEpoc) {
+	public Log(@NonNull String log, long timeEpoc) {
 		this(log, timeEpoc, LogType.GENERAL);
 	}
 
@@ -67,7 +64,7 @@ public class Log<T> {
 	 * @param log     The object to be logged
 	 * @param logTime True if the log should contain a date time stamp.
 	 */
-	public Log(@Nonnull T log, long timeEpoc, LogType logType) {
+	public Log(@Nonnull String log, long timeEpoc, LogType logType) {
 		this(log,timeEpoc, logType, null);
 	}
 	
@@ -77,12 +74,11 @@ public class Log<T> {
 	 * @param log     The object to be logged
 	 * @param logTime True if the log should contain a date time stamp.
 	 */
-	public Log(@Nonnull T log, long timeEpoc, LogType logType, String logTag) {
+	public Log(@Nonnull String log, long timeEpoc, LogType logType, String logTag) {
 		this();
 		mLogHeader = new LogHeader(new LogTime(timeEpoc));
 		mLogHeader.setLogType(logType);
 		mLogHeader.setLogTag(new LogTag(logTag));
-		mLoggedObject = log;
 		mLogBody = new LogBody(log.toString());
 		
 	}
@@ -92,7 +88,7 @@ public class Log<T> {
 	 * @param logHeader
 	 * @param logBody
 	 */
-	public Log(LogHeader logHeader, LogBody logBody) {
+	public Log(@Nonnull LogHeader logHeader, @Nonnull LogBody logBody) {
 		this();
 		mLogHeader = logHeader;
 		mLogBody = logBody;
@@ -105,15 +101,16 @@ public class Log<T> {
 	 */
 	private String formatLog() {
 		String[] lines = formatLogsIntoLines();
+		String formattedLog = "";
 		if (lines != null) {
 			for (String str : lines) {
 				System.out.println(String.valueOf(str));
-				mFormattedLog += "\n".concat(str);
+				formattedLog += "\n".concat(str);
 			}
-			return mFormattedLog;
+			return formattedLog;
 		} else {
-			mFormattedLog = getFormattedLog();
-			return mFormattedLog;
+			formattedLog = getFormattedLog();
+			return formattedLog;
 		}
 		
 	}
@@ -187,9 +184,9 @@ public class Log<T> {
 	 * 
 	 * @return Log.
 	 */
-	@SuppressWarnings("unchecked")
-	public T getLog() {
-		return (T) mLoggedObject;
+	
+	public String getLog() {
+		return mLogBody != null ? mLogBody.getBodyContent() : null;
 	}
 
 	/**
@@ -249,7 +246,7 @@ public class Log<T> {
 	 *
 	 */
 	public String getFormattedBody() {
-		return " " + mLoggedObject.toString();
+		return getLogBody() != null ? getLogBody().getBodyContent() : null;
 	}
 
 	/**
@@ -259,7 +256,7 @@ public class Log<T> {
 	@Override
 	public String toString() {
 		return "\nLog [mLogHeader=" + mLogHeader + ", mPerLineCharacterCountLimit=" + mPerLineCharacterCountLimit
-				+ ", mLoggedObject=" + mLoggedObject + ", mFormattedLog=" + mFormattedLog  + ", mLogTimeFlag=" + mLogTimeFlag + "]";
+				 + ", mLogTimeFlag=" + mLogTimeFlag + "]";
 	}
 
 }

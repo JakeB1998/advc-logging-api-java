@@ -14,7 +14,7 @@ import main.org.botka.logger.log.Log;
  * @author Jake Botka
  *
  */
-public class LogMap<K> extends HashMap<K, Log<?>> {
+public class LogMap<K> extends HashMap<K, Log> {
 
 	public LogMap() {
 		super(0);

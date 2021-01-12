@@ -26,7 +26,7 @@ public class LogHistoryRecorder implements LogRecorder {
 		return new LogHistoryRecorder();
 	}
 
-	private Vector<Log<?>> mLogs;
+	private Vector<Log> mLogs;
 
 	/**
 	 * Default Constrcutor.
@@ -40,10 +40,10 @@ public class LogHistoryRecorder implements LogRecorder {
 	 * 
 	 * @param logs Logs to be preloaded into data structure.
 	 */
-	public LogHistoryRecorder(@NonNull Log<?>[] logs) {
+	public LogHistoryRecorder(@NonNull Log[] logs) {
 		this();
 		if (logs != null) {
-			for (Log<?> log : logs) {
+			for (Log log : logs) {
 				this.recordLog(log);
 			}
 		}
@@ -54,8 +54,8 @@ public class LogHistoryRecorder implements LogRecorder {
 	 * 
 	 * @param logs Logs to be preloaded into data structure.
 	 */
-	public LogHistoryRecorder(@NonNull List<Log<?>> logs) {
-		this((Log<?>[]) logs.toArray());
+	public LogHistoryRecorder(@NonNull List<Log> logs) {
+		this((Log[]) logs.toArray());
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class LogHistoryRecorder implements LogRecorder {
 	 * @param log Log to be recorded.
 	 */
 	@Override
-	public boolean recordLog(@NonNull Log<?> log) {
+	public boolean recordLog(@NonNull Log log) {
 		if (log != null) {
 			this.mLogs.add(log);
 			return true;
@@ -84,11 +84,11 @@ public class LogHistoryRecorder implements LogRecorder {
 	 * 
 	 */
 	@Override
-	public boolean recordLogs(Log<?>[] logs) {
+	public boolean recordLogs(Log[] logs) {
 		boolean flag = false;
 		if (logs != null) {
 			flag = true;
-			for (Log<?> log : logs) {
+			for (Log log : logs) {
 				boolean result = this.recordLog(log);
 				if (flag) {
 					flag = result;
@@ -104,8 +104,8 @@ public class LogHistoryRecorder implements LogRecorder {
 	 * @return Array of logs.
 	 */
 	@Override
-	public Log<?>[] getLogs() {
-		Log<?>[] arr = new Log<?>[this.mLogs.size()];
+	public Log[] getLogs() {
+		Log[] arr = new Log[this.mLogs.size()];
 		return this.mLogs.toArray(arr);
 
 	}
@@ -116,7 +116,7 @@ public class LogHistoryRecorder implements LogRecorder {
 	 * @return list of logs.
 	 */
 	@Override
-	public List<Log<?>> getLogsAsList() {
+	public List<Log>getLogsAsList() {
 		return this.mLogs;
 	}
 

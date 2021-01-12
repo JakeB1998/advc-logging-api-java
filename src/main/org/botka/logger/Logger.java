@@ -69,9 +69,9 @@ public abstract class Logger {
 		this.mLogRecorder = logRecorder;
 	}
 	
-	public abstract void log(Log<?> log);
+	public abstract void log(Log log);
 	
-	public abstract void logAll(Log<?>[] logs);
+	public abstract void logAll(Log[] logs);
 	
 	/**
 	 * Clears error
@@ -96,17 +96,10 @@ public abstract class Logger {
 	 * @param log
 	 */
 	public void log(String log) {
-		this.log(new Log<String>(log, System.currentTimeMillis()));
+		this.log(new Log(log, System.currentTimeMillis()));
 	}
 	
-	/**
-	 * 
-	 * @param <T>
-	 * @param log
-	 */
-	public<T> void log(T log) {
-		this.log(new Log<T>(log, System.currentTimeMillis()));
-	}
+	
 
 	
 	/**
@@ -115,9 +108,9 @@ public abstract class Logger {
 	 */
 	public void logAll(String[] logs) {
 		if (logs != null) {
-			Log<String>[] logArray = new Log[logs.length];
+			Log[] logArray = new Log[logs.length];
 			for (int i = 0; i < logs.length; i++) {
-				logArray[i] = new Log<String>(logs[i], System.currentTimeMillis());
+				logArray[i] = new Log(logs[i], System.currentTimeMillis());
 			}
 		}
 	}

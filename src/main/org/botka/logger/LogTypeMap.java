@@ -21,7 +21,7 @@ import main.org.botka.logger.log.logtype.LogType;
  * @author Jake Botka
  *
  */
-public class LogTypeMap extends HashMap<LogType, Vector<Log<?>>> {
+public class LogTypeMap extends HashMap<LogType, Vector<Log>> {
 
 	private static final long serialVersionUID = -1161398212761689224L;
 
@@ -47,17 +47,17 @@ public class LogTypeMap extends HashMap<LogType, Vector<Log<?>>> {
 	 * 
 	 * @param listOfLogs List containing logs.
 	 */
-	public LogTypeMap(List<Log<?>> listOfLogs) {
+	public LogTypeMap(List<Log> listOfLogs) {
 		if (listOfLogs != null) {
-			Iterator<Log<?>> iterator = listOfLogs.iterator();
+			Iterator<Log> iterator = listOfLogs.iterator();
 			while (iterator.hasNext()) {
-				Log<?> obj = iterator.next();
+				Log obj = iterator.next();
 				LogType logType = obj.getLogType();
 				if (super.containsKey(logType)) {
-					Vector<Log<?>> vector = super.get(logType);
+					Vector<Log> vector = super.get(logType);
 					vector.add(obj);
 				} else {
-					Vector<Log<?>> vec = new Vector<>();
+					Vector<Log> vec = new Vector<>();
 					vec.add(obj);
 					super.put(logType, vec);
 				}
@@ -79,7 +79,7 @@ public class LogTypeMap extends HashMap<LogType, Vector<Log<?>>> {
 	 * @param logType
 	 * @return Log collection as list.
 	 */
-	public List<Log<?>> getLogs(LogType logType) {
+	public List<Log> getLogs(LogType logType) {
 		return super.containsKey(logType) ? new ArrayList(super.get(logType)) : null;
 	}
 }

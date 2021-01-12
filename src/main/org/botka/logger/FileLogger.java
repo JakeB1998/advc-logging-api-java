@@ -177,7 +177,7 @@ public class FileLogger extends BaseLogger {
 	 */
 	@Override
 	public void log(String str) {
-		this.log(new Log<String>(str, System.currentTimeMillis()));
+		this.log(new Log(str, System.currentTimeMillis()));
 	}
 
 	
@@ -187,7 +187,7 @@ public class FileLogger extends BaseLogger {
 	 *
 	 */
 	@Override
-	public void log(Log<?> log) {
+	public void log(Log log) {
 		LogRecorder recorder = super.getLogRecorder();
 		if (recorder != null) {
 			recorder.recordLog(log);
@@ -201,9 +201,9 @@ public class FileLogger extends BaseLogger {
 	 *
 	 */
 	@Override
-	public void logAll(Log<?>[] logs) {
+	public void logAll(Log[] logs) {
 		if (logs != null) {
-			for (Log<?> log : logs) {
+			for (Log log : logs) {
 				log(log);
 			}
 		}

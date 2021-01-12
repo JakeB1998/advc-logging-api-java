@@ -26,10 +26,10 @@ import main.org.botka.utility.api.base.DeepCloneInstance;
  * @author Jake Botka
  *
  */
-public class LogCollection implements DeepCloneInstance<Log<?>>, Serializable {
+public class LogCollection implements DeepCloneInstance<Log>, Serializable {
 	private static final long serialVersionUID = 675262036413294129L;
 	
-	private List<Log<?>> mLogCollection;
+	private List<Log> mLogCollection;
 	
 	/**
 	 * Default constructor.
@@ -41,30 +41,30 @@ public class LogCollection implements DeepCloneInstance<Log<?>>, Serializable {
 	/**
 	 * 
 	 */
-	public LogCollection(List<Log<?>> listOfLogs) {
+	public LogCollection(List<Log> listOfLogs) {
 		this();
 		this.mLogCollection = new ArrayList<>(listOfLogs);
 	}
 	
-	public Log<?> getLog(int index){
+	public Log getLog(int index){
 		return null;
 	}
 	
-	public Log<?> getLog(String logID) {
+	public Log getLog(String logID) {
 		return null;
 	}
 	
-	public Map<LocalDateTime, Log<?>> toDateMap(){
+	public Map<LocalDateTime, Log> toDateMap(){
 		return null;
 	}
 	
 	
 	
-	public Map<LocalTime, Log<?>> toTimeMap(){
+	public Map<LocalTime, Log> toTimeMap(){
 		return null;
 	}
 	
-	public Map<LocalTime, Log<?>> toTimeMap(LocalDate date){
+	public Map<LocalTime, Log> toTimeMap(LocalDate date){
 		return null;
 	}
 
@@ -72,7 +72,7 @@ public class LogCollection implements DeepCloneInstance<Log<?>>, Serializable {
 	 * 
 	 * @return Log collection as list.
 	 */
-	public List<Log<?>> getLogs() {
+	public List<Log> getLogs() {
 		return this.mLogCollection;
 	}
 	
@@ -82,8 +82,8 @@ public class LogCollection implements DeepCloneInstance<Log<?>>, Serializable {
 	 * 
 	 * @return Log collection as array.
 	 */
-	public Log<?>[] getLogsAsArray() {
-		List<Log<?>> arr = this.getLogs();
-		return arr != null ? arr.toArray((Log<?>[])new Object[0]) : null;
+	public Log[] getLogsAsArray() {
+		List<Log> arr = this.getLogs();
+		return arr != null ? arr.toArray((Log[])new Object[0]) : null;
 	}
 }

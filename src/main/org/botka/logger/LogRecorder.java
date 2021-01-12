@@ -27,24 +27,24 @@ public interface LogRecorder {
 
 	public default boolean recordLogs(List<?> logs) {
 		if (logs != null) {
-			return this.recordLogs(logs.toArray(new Log<?>[0]));
+			return this.recordLogs(logs.toArray(new Log[0]));
 		}
 		return false;
 	}
 
 	public default int getLogCount() {
-		Log<?>[] arr = getLogs();
+		Log[] arr = getLogs();
 		return arr != null ? arr.length : 0;
 	}
 
 	public void clearLogs();
 
-	public boolean recordLog(Log<?> log);
+	public boolean recordLog(Log log);
 
-	public boolean recordLogs(Log<?>[] logs);
+	public boolean recordLogs(Log[] logs);
 
-	public Log<?>[] getLogs();
+	public Log[] getLogs();
 
-	public List<Log<?>> getLogsAsList();
+	public List<Log> getLogsAsList();
 
 }

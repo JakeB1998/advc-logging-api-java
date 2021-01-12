@@ -20,13 +20,13 @@ public class LogContext implements Serializable {
 	private static final long serialVersionUID = 7893505705828112444L;
 
 
-	public static LogContext createContext(Log<?> log) {
+	public static LogContext createContext(Log log) {
 		return new LogContext(log);
 	}
 
 	private LocalDateTime mCreatedDateTime;
 	private LocalDateTime mLastModifiedDateTime;
-	private Log<?> mLog;
+	private Log mLog;
 	
 	
 	public LogContext() {
@@ -35,7 +35,7 @@ public class LogContext implements Serializable {
 		mLog = null;
 	}
 	
-	public LogContext(Log<?> log) {
+	public LogContext(Log log) {
 		mCreatedDateTime = LocalDateTime.now();
 		mLastModifiedDateTime = mCreatedDateTime;
 		mLog = log;
@@ -50,7 +50,7 @@ public class LogContext implements Serializable {
 		return mLastModifiedDateTime;
 	}
 	
-	public Log<?> getLog(){
+	public Log getLog(){
 		return mLog;
 	}
 	

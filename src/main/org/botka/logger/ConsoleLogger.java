@@ -40,7 +40,7 @@ public class ConsoleLogger extends BaseLogger {
 	 * @param log log object.
 	 */
 	@Override
-	public void log(Log<?> log) {
+	public void log(Log log) {
 		logString(log.getFormattedLog());
 	}
 	
@@ -49,9 +49,9 @@ public class ConsoleLogger extends BaseLogger {
 	 * @param logs array of logs.
 	 */
 	@Override
-	public void logAll(Log<?>[] logs) {
+	public void logAll(Log[] logs) {
 		if (logs != null && logs.length > 0) {
-			for (Log<?> log : logs) {
+			for (Log log : logs) {
 				logString(log.getFormattedLog());
 			}
 		}

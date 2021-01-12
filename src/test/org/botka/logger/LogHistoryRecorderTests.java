@@ -84,7 +84,7 @@ public class LogHistoryRecorderTests {
 	 */
 	@Test
 	public void tesLogArray() {
-		Log<String>[] logs = (Log<String>[]) LogSampleData.STRING_LOG_SMALL_SAMPLE;
+		Log[] logs =  LogSampleData.STRING_LOG_SMALL_SAMPLE;
 		Logger.Console.log(true, getClass(), Arrays.toString(logs));
 	}
 

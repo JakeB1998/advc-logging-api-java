@@ -7,13 +7,13 @@
 package test.org.botka.logger;
 
 import main.org.botka.logger.log.Log;
-import main.org.botka.logger.log.StringLog;
+
 
 /**
  * @author Jake Botka
  *
  */
 public class LogSampleData {
-	public static final StringLog[] STRING_LOG_SMALL_SAMPLE = { new StringLog("First log", System.currentTimeMillis()), 
-			new StringLog("First log", System.currentTimeMillis()), new StringLog("Second log", System.currentTimeMillis())}; 
+	public static final Log[] STRING_LOG_SMALL_SAMPLE = { new Log("First log", System.currentTimeMillis()), 
+			new Log("First log", System.currentTimeMillis()), new Log("Second log", System.currentTimeMillis())}; 
 }
