@@ -30,6 +30,9 @@ import main.org.botka.logger.FileLogger;
 import main.org.botka.logger.LogHistoryRecorder;
 import main.org.botka.logger.Logger;
 import main.org.botka.logger.log.Log;
+import main.org.botka.logger.log.LogBody;
+import main.org.botka.logger.log.LogHeader;
+import main.org.botka.logger.log.LogHeaderFormat;
 import main.org.botka.utility.api.util.FileUtil;
 
 
@@ -96,6 +99,9 @@ public class FileLoggerTests {
 				+ "I'm done, want to kick back, and enjoy the end of a movie, so I close the lid of my laptop- now everything moves onto the 2nd external monitor as if it was the single primary monitor."
 				+ " I just want it to stay the same. As if I had only turned one monitor off.", System.currentTimeMillis()));
 		FileLogger logger = (FileLogger)this.mFileLogger;
+		short[] headerOrderIds = new LogHeaderFormat.ItemOrderBuilder().classSource().logTag().timeStamp().buildOrderArray();
+		mFileLogger.log(new Log(
+				new LogHeader(System.currentTimeMillis(), getClass() ,"ERROR", headerOrderIds), new LogBody("This log has a different ordering of header items.")));
 		
 	}
 	

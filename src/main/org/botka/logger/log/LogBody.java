@@ -6,12 +6,16 @@
  */
 package main.org.botka.logger.log;
 
+import java.io.Serializable;
+
 /**
  * Body of Log.
  * @author Jake Botka
  *
  */
-public class LogBody {
+public class LogBody implements Serializable {
+	
+	private static final long serialVersionUID = 7585641032696645782L;
 	private String mBodyContent;
 	
 	/**

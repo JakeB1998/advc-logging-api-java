@@ -6,6 +6,7 @@
  */
 package main.org.botka.logger.log;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -25,10 +26,14 @@ import main.org.botka.utility.api.util.Util;
  * @see LogContext.java.
  * @author Jake Botka Class represents a log that contains a header and a body.
  */
-public class Log {
+public class Log implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5107531466511965752L;
 	public static final boolean DEFAULT_LOG_TIME = true;
-	public static final int DEFAULT_CHARACTER_PER_LINE_COUNT = 150;
+	public static final int DEFAULT_CHARACTER_PER_LINE_COUNT = 115;
 	public static final LogType DEFAULT_LOG_TYPE = LogType.GENERAL;
 
 	private LogHeader mLogHeader;
@@ -129,9 +134,9 @@ public class Log {
 			Vector<String> workingResult = new Vector<>();
 			boolean flag = false;
 			while (logContents.length() > mPerLineCharacterCountLimit) {
-				//generateSpaces(mLogHeader.getLogTime().getCharacterCount())
 				String limit = flag == true ? "" : getFormattedHeader();
-				String content = logContents.substring(0, mPerLineCharacterCountLimit);
+				int offset =  mPerLineCharacterCountLimit - limit.length();
+				String content = logContents.substring(0, offset > 0 ? offset : limit.length());
 				int parseIndex = -1;
 				// find last whitespace so word do not cut off or wrap.
 				int index = content.lastIndexOf(" ");
@@ -147,7 +152,7 @@ public class Log {
 				}
 			}
 			if (logContents.length() > 0) {
-				if (flag) {
+				if (!flag) {
 					workingResult.add(generateSpaces(mLogHeader.getLogTime().getCharacterCount()) + logContents);
 				} else {
 					workingResult.add(logContents);
