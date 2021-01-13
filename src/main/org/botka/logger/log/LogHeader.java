@@ -25,7 +25,7 @@ public class LogHeader implements Serializable {
 	
 	private static final long serialVersionUID = 8382553458681358168L;
 	private final Vector<ErrorWrapper> ERRORS = new Vector<>();
-	private short[] mHeaderOrderID;
+	private LogHeaderFormat mHeaderFormat;
 	private boolean mLogNulls;
 	private String mFormattedHeader, mLineSeperator;
 	private LogTime mLogTime;
@@ -39,7 +39,7 @@ public class LogHeader implements Serializable {
 	 * Default constructor.
 	 */
 	public LogHeader() {
-		mHeaderOrderID = null;
+		mHeaderFormat = null;
 		mFormattedHeader = null;
 		mLineSeperator = String.valueOf(LINE_SEP_DEFAULT);
 		mLogTag = null;
@@ -71,8 +71,8 @@ public class LogHeader implements Serializable {
 	 * @param class1
 	 * @param string
 	 */
-	public LogHeader(long epochTime, Class<?> source, String logTag, short[] orderingIds) {
-		this(new LogTime(epochTime), source, logTag, orderingIds);
+	public LogHeader(long epochTime, Class<?> source, String logTag, LogHeaderFormat headerFormat) {
+		this(new LogTime(epochTime), source, logTag, headerFormat);
 	}
 
 	
@@ -108,7 +108,7 @@ public class LogHeader implements Serializable {
 	 * @param logTag
 	 */
 	public LogHeader(LogTime logTime, Class<?> source,  String logTag) {
-		this(logTime,source,logTag, LogHeaderFormat.DEFAULT_HEADER_ORDERING);
+		this(logTime,source,logTag, new LogHeaderFormat(false, LogHeaderFormat.DEFAULT_HEADER_ORDERING));
 	}
 	
 	/**
@@ -116,12 +116,12 @@ public class LogHeader implements Serializable {
 	 * @param logTime
 	 * @param logTag
 	 */
-	public LogHeader(LogTime logTime, Class<?> source,  String logTag, short[] orderIDs) {
+	public LogHeader(LogTime logTime, Class<?> source,  String logTag, LogHeaderFormat headerFormat) {
 		this();
 		mLogTime = logTime;
 		mSource = source;
 		mLogTag = new LogTag(logTag);
-		mHeaderOrderID = orderIDs;
+		mHeaderFormat = headerFormat;
 	}
 	
 	
@@ -160,12 +160,13 @@ public class LogHeader implements Serializable {
 			boolean firstFlag = true;
 			strBuilder.append("[");
 			String holder = null;
-			if (mHeaderOrderID == null) {
-				mHeaderOrderID = LogHeaderFormat.DEFAULT_HEADER_ORDERING;
+			if (mHeaderFormat == null) {
+				mHeaderFormat = LogHeaderFormat.DEFAULT_FROMAT;
 			}
+			short[] orderIds = mHeaderFormat.getHeaderOrdering();
 			//Allows re ordering of header items
-			for (int i = 0; i < mHeaderOrderID.length; i++) {
-				short id = mHeaderOrderID[i];
+			for (int i = 0; i < orderIds.length; i++) {
+				short id = orderIds[i];
 				switch (id) {
 				case LogHeaderFormat.TIME_ID:
 					holder = mLogTime != null ? mLogTime.getFormattedTimeStamp() : null;

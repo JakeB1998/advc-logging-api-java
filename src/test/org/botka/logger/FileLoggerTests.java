@@ -101,7 +101,7 @@ public class FileLoggerTests {
 		FileLogger logger = (FileLogger)this.mFileLogger;
 		short[] headerOrderIds = new LogHeaderFormat.ItemOrderBuilder().classSource().logTag().timeStamp().buildOrderArray();
 		mFileLogger.log(new Log(
-				new LogHeader(System.currentTimeMillis(), getClass() ,"ERROR", headerOrderIds), new LogBody("This log has a different ordering of header items.")));
+				new LogHeader(System.currentTimeMillis(), getClass() ,"ERROR", new LogHeaderFormat(false,headerOrderIds)), new LogBody("This log has a different ordering of header items.")));
 		
 	}
 	
