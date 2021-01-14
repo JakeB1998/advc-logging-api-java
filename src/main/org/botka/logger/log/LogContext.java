@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * Context class to describe the state of a log and all of its additional data such as its meta data before serialization.
+ * Immutable context class to describe the state of a log and all of its additional data such as its meta data before serialization.
  * @author Jake Botka
  *
  */
@@ -18,40 +18,112 @@ public class LogContext implements Serializable {
 	
 	
 	private static final long serialVersionUID = 7893505705828112444L;
+	
+	private boolean mStored, mStoredPersistent;
 
 
+	/**
+	 * Creates context using a Log object. A log context describes the state of a fully processed log.
+	 * @param log Log object
+	 * @return New log context object.
+	 */
 	public static LogContext createContext(Log log) {
 		return new LogContext(log);
 	}
 
-	private LocalDateTime mCreatedDateTime;
-	private LocalDateTime mLastModifiedDateTime;
+	private LocalDateTime mCreatedDateTime, mLastModifiedDateTime;
 	private Log mLog;
 	
-	
+	/**
+	 * Default constructor.
+	 */
 	public LogContext() {
 		mCreatedDateTime = null;
 		mLastModifiedDateTime = null;
 		mLog = null;
 	}
 	
+	/**
+	 * Constructor.
+	 * @param log Log object.
+	 */
 	public LogContext(Log log) {
-		mCreatedDateTime = LocalDateTime.now();
-		mLastModifiedDateTime = mCreatedDateTime;
+		this();
 		mLog = log;
+		if (mLog != null) {
+			mCreatedDateTime = mLog.getLogTime() != null ? mLog.getLogTime().asLocalDateTime() : null;
+			mLastModifiedDateTime = mCreatedDateTime;
+		}
 	}
 	
+	/**
+	 * Check if this log contect instance is equal to another. The equality is tested by testing the equals method of the loog using {@code getLog()}.
+	 * if either logs are null returns false or if provided object param is not the instance of LogContext then will return false.
+	 * @param obj Log context object. If not isntance will return false.
+	 * @return True of this log context is equal to the log context provided with param.
+	 *
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof LogContext) {
+			LogContext context = (LogContext) obj;
+			if (context != null) {
+				Log log = context.getLog();
+				return log != null && this.getLog() != null ? log.equals(this.getLog()) : false;
+			}
+		}
+		return false;
+	}
 	
+	/**
+	 * Retrieve if this log has been stored either in a persistent location such as a file 
+	 * or in a volatile location such as a data structure running in the program.
+	 * @return True if this log is stored, otherwise false.
+	 */
+	public boolean isStored() {
+		return mStored;
+	}
+	
+	/**
+	 * Retrieve if the log was store in persistent storage such as a file.
+	 * @return True if this log is stored in presistent storage, othwerwise false.
+	 */
+	public boolean isStoredPersistently() {
+		return mStoredPersistent;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public LocalDateTime getCreatedDateTime() {
 		return mCreatedDateTime;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public LocalDateTime getLastModifiedDateTime() {
 		return mLastModifiedDateTime;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Log getLog(){
 		return mLog;
+	}
+
+	/**
+	 * @return
+	 * 
+	 */
+	@Override
+	public String toString() {
+		return "LogContext [mStored=" + mStored + ", mStoredPersistent=" + mStoredPersistent + ", mCreatedDateTime="
+				+ mCreatedDateTime + ", mLastModifiedDateTime=" + mLastModifiedDateTime + ", mLog=" + mLog + "]";
 	}
 	
 	

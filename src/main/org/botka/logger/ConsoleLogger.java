@@ -5,6 +5,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import main.org.botka.logger.log.Log;
+import main.org.botka.logger.log.LogHeaderFormat;
+import main.org.botka.logger.log.logtype.LogType;
 
 
 
@@ -12,19 +14,27 @@ import main.org.botka.logger.log.Log;
 
 /**
  * 
- * <insert class description here>
- *
+ * Console logger that inherits from BaseLogger.class to provide implementation to log output in log format to the systems default outputstream.
+ * @see BaseLoger.class
+ * @see System.out
  * @author Jake Botka
  *
  */
 public class ConsoleLogger extends BaseLogger {
 	private final Class<?> DEFAULT_CLASS = ConsoleLogger.class;
 	private Class<?> mDefinedClass;
+	private LogType mLogType;
+	private LogHeaderFormat mLogHeaderFormat;
 	private boolean mLogTimePermission, mLogClassPermission;
 
+	/**
+	 * Default constructor
+	 */
 	public ConsoleLogger() {
 		super();
 		mDefinedClass = DEFAULT_CLASS;
+		mLogType = null;
+		mLogHeaderFormat = LogHeaderFormat.DEFAULT_FROMAT;
 	}
 	
 	/**
@@ -33,6 +43,39 @@ public class ConsoleLogger extends BaseLogger {
 	 */
 	public ConsoleLogger(boolean logTime) {
 		mLogTimePermission = logTime;
+	}
+	
+	/**
+	 * Constructor.
+	 * @param logTime log time permission.
+	 * @param source
+	 */
+	public ConsoleLogger(boolean logTime, Class<?> source) {
+		this(logTime);
+		mDefinedClass = source;
+	}
+	
+	/**
+	 * 
+	 * @param logTime
+	 * @param source
+	 * @param logType
+	 */
+	public ConsoleLogger(boolean logTime, Class<?> source, LogType logType) {
+		this(logTime, source);
+		mLogType = logType;
+	}
+	
+	/**
+	 * 
+	 * @param logTime
+	 * @param source
+	 * @param logType
+	 * @param headerFormat
+	 */
+	public ConsoleLogger(boolean logTime, Class<?> source, LogType logType, LogHeaderFormat headerFormat) {
+		this(logTime, source, logType);
+		mLogHeaderFormat = headerFormat;
 	}
 
 	/**
@@ -61,7 +104,9 @@ public class ConsoleLogger extends BaseLogger {
 
 	/**
 	 * Logs string.
-	 * Logs time based on objects set value for log time permission.
+	 * Logs time based on objects set value for log time permission. Time is logged using the log time permissions. 
+	 * By default logs time.
+	 * @param str Log string
 	 */
 	public void logString(String str) {
 		logString(str, mLogTimePermission);
@@ -75,6 +120,96 @@ public class ConsoleLogger extends BaseLogger {
 	 */
 	public void logString(String str, boolean logTime) {
 		Logger.Console.log(logTime, null, str);
+	}
+	
+	
+
+	/**
+	 * @return the mDefinedClass
+	 */
+	public Class<?> getDefinedClass() {
+		return mDefinedClass;
+	}
+
+	/**
+	 * @param mDefinedClass the mDefinedClass to set
+	 */
+	public void setDefinedClass(Class<?> definedClass) {
+		this.mDefinedClass = definedClass;
+	}
+
+	/**
+	 * @return the mLogType
+	 */
+	public LogType getLogType() {
+		return mLogType;
+	}
+
+	/**
+	 * @param mLogType the mLogType to set
+	 */
+	public void setLogType(LogType logType) {
+		this.mLogType = logType;
+	}
+
+	/**
+	 * @return the mLogHeaderFormat
+	 */
+	public LogHeaderFormat getLogHeaderFormat() {
+		return mLogHeaderFormat;
+	}
+
+	/**
+	 * @param mLogHeaderFormat the mLogHeaderFormat to set
+	 */
+	public void setmLogHeaderFormat(LogHeaderFormat logHeaderFormat) {
+		this.mLogHeaderFormat = logHeaderFormat;
+	}
+
+	/**
+	 * @return the mLogTimePermission
+	 */
+	public boolean isLogTimePermission() {
+		return mLogTimePermission;
+	}
+
+	/**
+	 * @param mLogTimePermission the mLogTimePermission to set
+	 */
+	public void setmLogTimePermission(boolean logTimePermission) {
+		this.mLogTimePermission = logTimePermission;
+	}
+
+	/**
+	 * @return the mLogClassPermission
+	 */
+	public boolean isLogClassPermission() {
+		return mLogClassPermission;
+	}
+
+	/**
+	 * @param mLogClassPermission the mLogClassPermission to set
+	 */
+	public void setLogClassPermission(boolean logClassPermission) {
+		this.mLogClassPermission = logClassPermission;
+	}
+
+	/**
+	 * @return the dEFAULT_CLASS
+	 */
+	public Class<?> getDEFAULT_CLASS() {
+		return DEFAULT_CLASS;
+	}
+
+	/**
+	 * @return
+	 * 
+	 */
+	@Override
+	public String toString() {
+		return "ConsoleLogger [DEFAULT_CLASS=" + DEFAULT_CLASS + ", mDefinedClass=" + mDefinedClass + ", mLogType="
+				+ mLogType + ", mLogTimePermission=" + mLogTimePermission + ", mLogClassPermission="
+				+ mLogClassPermission + "]";
 	}
 
 	

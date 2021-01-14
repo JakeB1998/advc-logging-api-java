@@ -22,12 +22,14 @@ import main.org.botka.logger.log.logtype.LogType;
 import main.org.botka.utility.api.util.Util;
 
 /**
- * Log class that represents information directly related to the log. proccessed logs will be wrapped with the LogContext.java class
+ * Log class that represents information directly related to the log. processed
+ * logs will be wrapped with the LogContext.java class
+ * 
  * @see LogContext.java.
  * @author Jake Botka Class represents a log that contains a header and a body.
  */
 public class Log implements Serializable {
-	
+
 	/**
 	 * 
 	 */
@@ -40,8 +42,6 @@ public class Log implements Serializable {
 	private LogBody mLogBody;
 	private int mPerLineCharacterCountLimit;
 	private boolean mLogTimeFlag;
-
-	
 
 	/**
 	 * Default constructor.
@@ -70,9 +70,9 @@ public class Log implements Serializable {
 	 * @param logTime True if the log should contain a date time stamp.
 	 */
 	public Log(@Nonnull String log, long timeEpoc, LogType logType) {
-		this(log,timeEpoc, logType, null);
+		this(log, timeEpoc, logType, null);
 	}
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -85,24 +85,26 @@ public class Log implements Serializable {
 		mLogHeader.setLogType(logType);
 		mLogHeader.setLogTag(new LogTag(logTag));
 		mLogBody = new LogBody(log.toString());
-		
+
 	}
-	
+
 	/**
+	 * Constructor.
 	 * 
-	 * @param logHeader
-	 * @param logBody
+	 * @param logHeader Log header object.
+	 * @param logBody   Log body object.
 	 */
 	public Log(@Nonnull LogHeader logHeader, @Nonnull LogBody logBody) {
 		this();
 		mLogHeader = logHeader;
 		mLogBody = logBody;
-		
+
 	}
 
-	
 	/**
 	 * Formats log into a formatted string format.
+	 * 
+	 * @return String of the log formatted.
 	 */
 	private String formatLog() {
 		String[] lines = formatLogsIntoLines();
@@ -117,7 +119,7 @@ public class Log implements Serializable {
 			formattedLog = getFormattedLog();
 			return formattedLog;
 		}
-		
+
 	}
 
 	/**
@@ -135,7 +137,7 @@ public class Log implements Serializable {
 			boolean flag = false;
 			while (logContents.length() > mPerLineCharacterCountLimit) {
 				String limit = flag == true ? "" : getFormattedHeader();
-				int offset =  mPerLineCharacterCountLimit - limit.length();
+				int offset = mPerLineCharacterCountLimit - limit.length();
 				String content = logContents.substring(0, offset > 0 ? offset : limit.length());
 				int parseIndex = -1;
 				// find last whitespace so word do not cut off or wrap.
@@ -185,34 +187,37 @@ public class Log implements Serializable {
 	}
 
 	/**
-	 * Gets this log
+	 * Gets this log as a string. This is the log body content.
 	 * 
-	 * @return Log.
+	 * @return String log.
 	 */
-	
+
 	public String getLog() {
 		return mLogBody != null ? mLogBody.getBodyContent() : null;
 	}
 
 	/**
+	 * Gets the log time object associated with this log.
 	 * 
-	 * @return
+	 * @return Log time object.
 	 */
 	public LogTime getLogTime() {
 		return mLogHeader != null ? mLogHeader.getLogTime() : null;
 	}
 
 	/**
+	 * Gets the log header object associated with this log
 	 * 
-	 * @return
+	 * @return Log header object.
 	 */
 	public LogHeader getLogHeader() {
 		return mLogHeader;
 	}
-	
+
 	/**
+	 * Gets the log body object associated with this log.
 	 * 
-	 * @return
+	 * @return Log body object.
 	 */
 	public LogBody getLogBody() {
 		return mLogBody;
@@ -261,7 +266,7 @@ public class Log implements Serializable {
 	@Override
 	public String toString() {
 		return "\nLog [mLogHeader=" + mLogHeader + ", mPerLineCharacterCountLimit=" + mPerLineCharacterCountLimit
-				 + ", mLogTimeFlag=" + mLogTimeFlag + "]";
+				+ ", mLogTimeFlag=" + mLogTimeFlag + "]";
 	}
 
 }
