@@ -20,12 +20,12 @@ import main.org.botka.logger.log.logtype.LogType;
  * @author Jake Botka
  *
  */
-public class ConsoleLogger extends BaseLogger {
+public class ConsoleLogger extends BaseLogger implements LocalDebugLogging {
 	private final Class<?> DEFAULT_CLASS = ConsoleLogger.class;
 	private Class<?> mDefinedClass;
 	private LogType mLogType;
 	private LogHeaderFormat mLogHeaderFormat;
-	private boolean mLogTimePermission, mLogClassPermission;
+	private boolean  mLogTimePermission, mLogClassPermission, mGlobalDebugOverride, mLocalDebugLogPermission;
 
 	/**
 	 * Default constructor
@@ -35,6 +35,7 @@ public class ConsoleLogger extends BaseLogger {
 		mDefinedClass = DEFAULT_CLASS;
 		mLogType = null;
 		mLogHeaderFormat = LogHeaderFormat.DEFAULT_FROMAT;
+		mLocalDebugLogPermission = true;
 	}
 	
 	/**
@@ -95,7 +96,13 @@ public class ConsoleLogger extends BaseLogger {
 	public void logAll(Log[] logs) {
 		if (logs != null && logs.length > 0) {
 			for (Log log : logs) {
-				logString(log.getFormattedLog());
+				if (log != null) {
+					logString(log.getFormattedLog());
+				} else {
+					if (Logger.globalDebugLogging) {
+						Logger.Console.logError(true, getClass(), "Object 'log' was null thus not logged");
+					}
+				}
 			}
 		}
 		
@@ -122,6 +129,41 @@ public class ConsoleLogger extends BaseLogger {
 		Logger.Console.log(logTime, null, str);
 	}
 	
+	/**
+	 * @return
+	 * 
+	 */
+	@Override
+	public boolean isGlobalLoggingOverriden() {
+		return mGlobalDebugOverride;
+	}
+
+	/**
+	 * @return
+	 * 
+	 */
+	@Override
+	public boolean isDebugLoggingLocally() {
+		return mLocalDebugLogPermission;
+	}
+
+	/**
+	 * @param override
+	 * 
+	 */
+	@Override
+	public void setGloablLoggingOverride(boolean override) {
+		mGlobalDebugOverride = override;
+	}
+
+	/**
+	 * @param localDebugLogging
+	 * 
+	 */
+	@Override
+	public void setLocalDebugLogging(boolean localDebugLogging) {
+		mLocalDebugLogPermission = localDebugLogging;
+	}
 	
 
 	/**
@@ -162,7 +204,7 @@ public class ConsoleLogger extends BaseLogger {
 	/**
 	 * @param mLogHeaderFormat the mLogHeaderFormat to set
 	 */
-	public void setmLogHeaderFormat(LogHeaderFormat logHeaderFormat) {
+	public void setLogHeaderFormat(LogHeaderFormat logHeaderFormat) {
 		this.mLogHeaderFormat = logHeaderFormat;
 	}
 
@@ -211,6 +253,8 @@ public class ConsoleLogger extends BaseLogger {
 				+ mLogType + ", mLogTimePermission=" + mLogTimePermission + ", mLogClassPermission="
 				+ mLogClassPermission + "]";
 	}
+
+	
 
 	
 

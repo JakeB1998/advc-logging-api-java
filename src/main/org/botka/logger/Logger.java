@@ -37,6 +37,7 @@ import main.org.botka.utility.api.exceptions.NotImplementedYetException;
  */
 public abstract class Logger {
 
+	public static boolean globalDebugLogging = true;
 	private LogRecorder mLogRecorder;
 	private ActiveLogTypes mActiveLogTypes;
 	private volatile boolean mError;
