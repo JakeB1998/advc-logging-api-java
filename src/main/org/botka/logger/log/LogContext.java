@@ -93,32 +93,32 @@ public class LogContext implements Serializable {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Get the local date time of the creation of the log.
+	 * @return Local date time of the creation of the log based on its inital time stamp meta data
 	 */
 	public LocalDateTime getCreatedDateTime() {
 		return mCreatedDateTime;
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Get the local date time of the last modificationn done to the log object.
+	 * @return Local date time of last modification done to log
 	 */
 	public LocalDateTime getLastModifiedDateTime() {
 		return mLastModifiedDateTime;
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Gets log object that this context describes.
+	 * @return log
 	 */
 	public Log getLog(){
 		return mLog;
 	}
 
 	/**
-	 * @return
-	 * 
+	 * Get a string representation of this objects instance.
+	 * @return String representation of this object's instance
 	 */
 	@Override
 	public String toString() {
