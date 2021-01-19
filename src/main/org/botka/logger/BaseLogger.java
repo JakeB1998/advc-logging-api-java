@@ -9,15 +9,17 @@ package main.org.botka.logger;
 import main.org.botka.logger.log.Log;
 
 /**
+ * Base logger that adds implementation from the Logger interface
+ * @see main.org.botka.logger.Logger
  * @author Jake Botka
  *
  */
 public class BaseLogger extends Logger {
 
-	private boolean mLogTime;
+	
 	
 	/**
-	 *
+	 * Default constructor.
 	 */
 	public BaseLogger() {
 		super();
@@ -25,7 +27,7 @@ public class BaseLogger extends Logger {
 	}
 
 	/**
-	 *@param logHistoryRecorder
+	 * @param logHistoryRecorder Log history recorder delagate object
 	 */
 	public BaseLogger(LogHistoryRecorder logHistoryRecorder) {
 		super(logHistoryRecorder);
@@ -34,7 +36,7 @@ public class BaseLogger extends Logger {
 	}
 
 	/**
-	 *@param logRecorder
+	 * @param logRecorder Log recorder object
 	 */
 	public BaseLogger(LogRecorder logRecorder) {
 		super(logRecorder);
@@ -42,6 +44,9 @@ public class BaseLogger extends Logger {
 		
 	}
 	
+	/**
+	 * 
+	 */
 	private void init() {
 		//this.mLogTypeMap = new LogTypeMap(0);
 		if (super.getLogRecorder() == null) {
@@ -51,6 +56,11 @@ public class BaseLogger extends Logger {
 
 	
 
+	/**
+	 * Log a log object.
+	 * @param log Log
+	 * @see main.org.botka.logger.log
+	 */
 	@Override
 	public void log(Log log) {
 		LogRecorder recorder = super.getLogRecorder();
@@ -62,6 +72,10 @@ public class BaseLogger extends Logger {
 
 	
 
+	/**
+	 * Log all log objects.
+	 * @param logs Array of logs
+	 */
 	@Override
 	public void logAll(Log[] logs) {
 		if (logs != null) {

@@ -22,6 +22,10 @@ import main.org.botka.logger.log.Log;
  */
 public class LogHistoryRecorder implements LogRecorder {
 
+	/**
+	 * Gets the default log recorder implementation instance.
+	 * @return Default log recorder delegate
+	 */
 	public static LogHistoryRecorder getDefaultLogRecorder() {
 		return new LogHistoryRecorder();
 	}
@@ -58,10 +62,12 @@ public class LogHistoryRecorder implements LogRecorder {
 		this((Log[]) logs.toArray());
 	}
 
+	/**
+	 * Clears logs from history.
+	 */
 	@Override
 	public void clearLogs() {
 		this.mLogs.clear();
-
 	}
 
 	/**
