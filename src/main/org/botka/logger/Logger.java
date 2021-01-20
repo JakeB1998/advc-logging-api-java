@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -37,11 +38,37 @@ import main.org.botka.utility.api.exceptions.NotImplementedYetException;
  */
 public abstract class Logger {
 
+	public static final Logger DEF_GLOBAL_LOGGER = new ConsoleLogger();
 	public static boolean globalDebugLogging = true;
+	private  static Logger globalSystemLogger = DEF_GLOBAL_LOGGER;
 	private LogRecorder mLogRecorder;
 	private ActiveLogTypes mActiveLogTypes;
 	private volatile boolean mError;
 	private String mErrorMessage;
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static Logger defaultGlobalLogger() {
+		return DEF_GLOBAL_LOGGER;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static Logger globalLogger() {
+		return globalSystemLogger;
+	}
+	
+	public static void setGlobalLogger(@Nonnull Logger logger) {
+		if (logger != null) {
+			globalSystemLogger = logger;
+		} else {
+			globalSystemLogger.log("Can not set global logger to null");
+		}
+	}
 	
 	/**
 	 * Default Constructor.
@@ -77,7 +104,7 @@ public abstract class Logger {
 	/**
 	 * Clears error
 	 */
-	private void clearError() {
+	protected void clearError() {
 		this.mError = false;
 		this.mErrorMessage = null;
 	}
@@ -116,7 +143,13 @@ public abstract class Logger {
 		}
 	}
 
-	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getErrorMessage() {
+		return mErrorMessage;
+	}
 
 	
 	/**

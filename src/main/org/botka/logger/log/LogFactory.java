@@ -17,6 +17,18 @@ public final class LogFactory {
 		
 	}
 	
+	public static Log createErrorLog(Class<?> source, String logContent) {
+		return createErrorLog(true, source, logContent);
+	}
+	
+	public static Log createErrorLog(boolean timeStamp, String logContent) {
+		return createErrorLog(timeStamp, null, logContent);
+	}
+	
+	public static Log createErrorLog(boolean timeStamp, Class<?> source, String logContent) {
+		return new Log(new LogHeader(System.currentTimeMillis(), source, "ERROR", true), new LogBody(logContent));
+	}
+	
 	
 	
 	

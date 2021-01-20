@@ -16,6 +16,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import com.google.common.io.Files;
 
 import main.org.botka.logger.log.Log;
+import main.org.botka.logger.log.LogFactory;
 import main.org.botka.logger.log.LogTime;
 import main.org.botka.utility.api.base.FileWriteMode;
 import main.org.botka.utility.api.util.Util;
@@ -24,24 +25,33 @@ import main.org.botka.utility.api.util.Util;
 public class FileLogger extends BaseLogger {
 	public static final FileWriteMode FILE_WRITE_MODE_DEFAULT = FileWriteMode.Append;
 	public static final boolean TIME_STAMP_PERM_DEFAULT = false;
+	public static final String FILE_LOG_START_TEXT = "***START LOG STREAM***";
+	public static final String FILE_LOG_END_TEXT = "***END LOG STREAM***";
+	public static final String FILE_HEADER_TEXT = "This is a Log file Header.";
+	public static final String FILE_FOOTER_TEXT = "";
+	
+	private Logger mSystemLogger;
 	private FileWriteMode mFileWriteMode;
-	private File mLoggerFile;
+	private File mLoggerFile, mTempLoggerFile;
 	private BufferedWriter mBufferedWriter;
 	private FileWriter mFileWriter;
 	private FilterReader mFileReader;
 	
 	private int mCurrentLine;
-	private boolean mTimeStamps;
+	private boolean mTimeStamps, mIncludeDefHeader, mIncludeDefFooter;
 
 	/**
 	 * Constructor.
 	 */
 	public FileLogger() {
 		super();
+		mSystemLogger = Logger.globalLogger();
 		this.mLoggerFile = null;
 		this.mBufferedWriter = null;
 		this.mFileWriter = null;
 		this.mFileReader = null;
+		mIncludeDefHeader = true;
+		mIncludeDefFooter = true;
 	}
 	
 	/**
@@ -143,10 +153,12 @@ public class FileLogger extends BaseLogger {
 	 * @param clearDoc
 	 */
 	private void init(@NonNull File file, boolean clearDoc) {
-		mLoggerFile = file;
 		if (file == null) {
-			throw new NullPointerException("File is null");
+			throw new IllegalStateException("File is null");
 		}
+		mLoggerFile = file;
+		mTempLoggerFile = null;
+		
 		if (!file.exists()) {
 			try {
 				if (!file.createNewFile()) {
@@ -157,12 +169,31 @@ public class FileLogger extends BaseLogger {
 				e.printStackTrace();
 			}
 		}
-		try {
-			mFileWriter = new FileWriter(mLoggerFile, clearDoc);
-			mBufferedWriter = new BufferedWriter(mFileWriter);
-		} catch (IOException e) {
-
-			e.printStackTrace();
+		
+		if (!hasError()) {
+			//create temp file
+			try {
+				mTempLoggerFile = File.createTempFile("tempfiles", ".tmp", mLoggerFile);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			try {
+				mFileWriter = new FileWriter(mTempLoggerFile, !clearDoc);
+				mBufferedWriter = new BufferedWriter(mFileWriter);
+				if (clearDoc) {
+					if (mIncludeDefHeader) {
+						write(FILE_HEADER_TEXT);
+					}
+					if (mIncludeDefFooter) {
+						write(FILE_FOOTER_TEXT);
+					}
+				}
+			} catch (IOException e) {
+	
+				e.printStackTrace();
+			}
+		} else {
+			Logger.Console.logError(true, getClass(), "There is a error present on file logger during file initialization: '" + getErrorMessage() + "'");
 		}
 	}
 
@@ -284,43 +315,41 @@ public class FileLogger extends BaseLogger {
 	 */
 	private void write(String content) {
 		
-		boolean errorFlag = false;
+		
 		boolean writePermissions = false;
 		//Error check one. Checks files context.
 		if (!mLoggerFile.exists()) {
 			try {
 				if (!mLoggerFile.createNewFile()) {
-					errorFlag = true;
+					setError(true, "Could not create a new file due to the abcesne of provided file. Please provide new File");
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				errorFlag = true;
 			}
 		}
 		//Error check Two. Checks permissions.
-		if (!errorFlag) {
+		if (!hasError()) {
 			if (mLoggerFile.canWrite()) {
 				writePermissions = true;
+				//Main function.
+				if (writePermissions == true) {
+					if (this.mBufferedWriter != null) {
+						try {
+							this.mBufferedWriter.write(content);
+							this.mBufferedWriter.flush();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} 	
+					}
+				}
 			} else {
-				System.err.println("File does not have write permissions");
+				Logger.globalLogger().log(LogFactory.createErrorLog(getClass(), "File does not have write permissions"));
 			}
 		} else {
-			System.err.println("File was not found and could not be created");
+			Logger.globalLogger().log(LogFactory.createErrorLog(getClass(),"File was not found and could not be created"));
 		}
-		//Main function.
-		if (errorFlag == false && writePermissions == true) {
-			if (this.mBufferedWriter != null) {
-				try {
-					
-					this.mBufferedWriter.write(content);
-					this.mBufferedWriter.flush();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} 
-				
-			}
-		}
+		
 	}
 
 

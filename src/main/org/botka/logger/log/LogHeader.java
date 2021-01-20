@@ -26,7 +26,7 @@ public class LogHeader implements Serializable {
 	private static final long serialVersionUID = 8382553458681358168L;
 	private final Vector<ErrorWrapper> ERRORS = new Vector<>();
 	private LogHeaderFormat mHeaderFormat;
-	private boolean mLogNulls;
+	private boolean mLogNulls, mError;
 	private String mFormattedHeader, mLineSeperator;
 	private LogTime mLogTime;
 	private Class<?> mSource;
@@ -71,6 +71,16 @@ public class LogHeader implements Serializable {
 	 * @param class1
 	 * @param string
 	 */
+	public LogHeader(long epochTime, Class<?> source, String logTag, boolean isErrorLog) {
+		this(new LogTime(epochTime), source, logTag, isErrorLog);
+	}
+	
+	
+	/**
+	 * @param currentTimeMillis
+	 * @param class1
+	 * @param string
+	 */
 	public LogHeader(long epochTime, Class<?> source, String logTag, LogHeaderFormat headerFormat) {
 		this(new LogTime(epochTime), source, logTag, headerFormat);
 	}
@@ -107,8 +117,18 @@ public class LogHeader implements Serializable {
 	 * @param logTime
 	 * @param logTag
 	 */
-	public LogHeader(LogTime logTime, Class<?> source,  String logTag) {
+	public LogHeader(LogTime logTime, Class<?> source, String logTag) {
 		this(logTime,source,logTag, new LogHeaderFormat(false, LogHeaderFormat.DEFAULT_HEADER_ORDERING));
+	}
+	
+	/**
+	 * 
+	 * @param logTime
+	 * @param logTag
+	 */
+	public LogHeader(LogTime logTime, Class<?> source, String logTag, boolean isErrorLog) {
+		this(logTime,source,logTag, new LogHeaderFormat(false, LogHeaderFormat.DEFAULT_HEADER_ORDERING));
+		setErrorLog(isErrorLog);
 	}
 	
 	/**
@@ -201,6 +221,22 @@ public class LogHeader implements Serializable {
 	 */
 	public boolean hasErros() {
 		return ERRORS.size() > 0;
+	}
+	
+	/**
+	 * Gets if this log is an error log.
+	 * @return
+	 */
+	public boolean isErrorLog() {
+		return mError;
+	}
+	
+	/**
+	 * Labels log as an error log.
+	 * @param error Set true if this log is an error log, otherwise set false.
+	 */
+	public void setErrorLog(boolean error) {
+		mError = error;
 	}
 	
 	/**

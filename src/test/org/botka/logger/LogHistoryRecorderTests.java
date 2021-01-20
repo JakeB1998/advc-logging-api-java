@@ -9,6 +9,9 @@ package test.org.botka.logger;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
+import java.util.List;
+
+import javax.xml.transform.dom.DOMLocator;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -26,7 +29,7 @@ import main.org.botka.logger.log.Log;
  *
  */
 public class LogHistoryRecorderTests {
-
+	private static boolean logging = true;
 	private LogRecorder mLogRecorder;
 	
 	/**
@@ -68,24 +71,20 @@ public class LogHistoryRecorderTests {
 	 */
 	@Test
 	public void testGetDefaultLogRecorder() {
-		fail("Not yet implemented");
+		assertTrue(LogHistoryRecorder.getDefaultLogRecorder() != null);
 	}
 
-	/**
-	 * Test method for {@link main.org.botka.logger.LogHistoryRecorder#LogHistoryRecorder()}.
-	 */
-	@Test
-	public void testLogHistoryRecorder() {
-		fail("Not yet implemented");
-	}
+	
 
 	/**
 	 * Test method for {@link main.org.botka.logger.LogHistoryRecorder#LogHistoryRecorder(main.org.botka.logger.log.Log<?>[])}.
 	 */
 	@Test
-	public void tesLogArray() {
+	public void testLogArray() {
 		Log[] logs =  LogSampleData.STRING_LOG_SMALL_SAMPLE;
-		Logger.Console.log(true, getClass(), Arrays.toString(logs));
+		if (logging) {
+			Logger.Console.log(true, getClass(), Arrays.toString(logs));
+		}
 	}
 
 	
@@ -95,7 +94,13 @@ public class LogHistoryRecorderTests {
 	 */
 	@Test
 	public void testClearLogs() {
-		fail("Not yet implemented");
+		Log[] logs =  LogSampleData.STRING_LOG_SMALL_SAMPLE;
+		mLogRecorder.recordLogs(logs);
+		assertTrue(logs != null && mLogRecorder != null);
+		assertTrue(mLogRecorder.getLogCount() == logs.length);
+		mLogRecorder.clearLogs();
+		assertTrue(mLogRecorder.getLogCount() == 0);
+		
 	}
 
 	/**
@@ -103,7 +108,10 @@ public class LogHistoryRecorderTests {
 	 */
 	@Test
 	public void testRecordLog() {
-		fail("Not yet implemented");
+		Log[] logs = LogSampleData.STRING_LOG_SMALL_SAMPLE;
+		assertTrue(mLogRecorder != null && logs != null);
+		mLogRecorder.recordLog(logs[0]);
+		assertTrue(mLogRecorder.getLogs()[0].equals(logs[0]));
 	}
 
 	/**
@@ -111,7 +119,11 @@ public class LogHistoryRecorderTests {
 	 */
 	@Test
 	public void testRecordLogs() {
-		fail("Not yet implemented");
+		Log[] logs = LogSampleData.STRING_LOG_SMALL_SAMPLE;
+		assertTrue(mLogRecorder != null && logs != null);
+		mLogRecorder.recordLogs(logs);
+		assertTrue(Arrays.equals(mLogRecorder.getLogs(), logs));
+		
 	}
 
 	/**
@@ -119,7 +131,12 @@ public class LogHistoryRecorderTests {
 	 */
 	@Test
 	public void testGetLogs() {
-		fail("Not yet implemented");
+		Log[] logs = LogSampleData.STRING_LOG_SMALL_SAMPLE;
+		assertTrue(mLogRecorder != null && logs != null);
+		assertTrue(mLogRecorder.getLogs().length == 0);
+		mLogRecorder.recordLogs(logs);
+		assertTrue(Arrays.equals(mLogRecorder.getLogs(), logs));
+		
 	}
 
 	/**
@@ -127,15 +144,14 @@ public class LogHistoryRecorderTests {
 	 */
 	@Test
 	public void testGetLogsAsList() {
-		fail("Not yet implemented");
+		Log[] logs = LogSampleData.STRING_LOG_SMALL_SAMPLE;
+		assertTrue(mLogRecorder != null && logs != null);
+		mLogRecorder.recordLogs(logs);
+		List<Log> logList = mLogRecorder.getLogsAsList();
+		assertTrue(Arrays.equals(logList.toArray(new Log[0]), logs));
+		
 	}
 
-	/**
-	 * Test method for {@link main.org.botka.logger.LogHistoryRecorder#getLogCollectionCopy()}.
-	 */
-	@Test
-	public void testGetLogCollectionCopy() {
-		fail("Not yet implemented");
-	}
+	
 
 }

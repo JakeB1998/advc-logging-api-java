@@ -111,7 +111,6 @@ public class Log implements Serializable {
 		String formattedLog = "";
 		if (lines != null) {
 			for (String str : lines) {
-				System.out.println(String.valueOf(str));
 				formattedLog += "\n".concat(str);
 			}
 			return formattedLog;

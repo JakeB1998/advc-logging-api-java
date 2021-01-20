@@ -33,7 +33,7 @@ public interface LocalDebugLogging {
 	 * @see Logger.class
 	 */
 	public default boolean canDebugLog() {
-		if (isGlobalLoggingOverriden()) {
+		if (isGlobalDebugLoggingOverriden()) {
 			return isDebugLoggingLocally();
 		} else {
 			return Logger.globalDebugLogging;
@@ -41,7 +41,7 @@ public interface LocalDebugLogging {
 		
 	}
 	
-	public boolean isGlobalLoggingOverriden();
+	public boolean isGlobalDebugLoggingOverriden();
 	public boolean isDebugLoggingLocally();
 	
 	public void setGloablLoggingOverride(boolean override);

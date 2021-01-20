@@ -85,7 +85,13 @@ public class ConsoleLogger extends BaseLogger implements LocalDebugLogging {
 	 */
 	@Override
 	public void log(Log log) {
-		logString(log.getFormattedLog());
+		boolean errorLog = log != null ? log.getLogHeader().isErrorLog() : false;
+		if (errorLog) {
+			System.err.println(String.valueOf(log.getFormattedLog()));
+			
+		} else {
+			System.out.println(String.valueOf(log.getFormattedLog()));
+		}
 	}
 	
 	/**
@@ -126,7 +132,22 @@ public class ConsoleLogger extends BaseLogger implements LocalDebugLogging {
 	 * @param logTime log time permission.
 	 */
 	public void logString(String str, boolean logTime) {
-		Logger.Console.log(logTime, null, str);
+		logString(str, logTime, false);
+	}
+	
+	/**
+	 * Logs string.
+	 * 
+	 * @param str string to log.
+	 * @param logTime log time permission.
+	 */
+	public void logString(String str, boolean logTime, boolean error) {
+		if (error) {
+			Logger.Console.logError(logTime, getClass(), str);
+		} else {
+			Logger.Console.log(logTime, getClass(), str);
+		}
+		
 	}
 	
 	/**
@@ -134,7 +155,7 @@ public class ConsoleLogger extends BaseLogger implements LocalDebugLogging {
 	 * 
 	 */
 	@Override
-	public boolean isGlobalLoggingOverriden() {
+	public boolean isGlobalDebugLoggingOverriden() {
 		return mGlobalDebugOverride;
 	}
 
