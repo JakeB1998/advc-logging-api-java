@@ -47,21 +47,28 @@ public abstract class Logger {
 	private String mErrorMessage;
 	
 	/**
-	 * 
-	 * @return
+	 * This is the global logger. By default it is a console logger object However this can be changed. THis can be optionaly utilized.
+	 * It is highly reccommended to create your own logger object. However if debug logging for the api is enabled the system will use THIS logger to globaly log debug messages to.
+	 * @return Console logger oject casted to logger object.
 	 */
 	public static Logger defaultGlobalLogger() {
 		return DEF_GLOBAL_LOGGER;
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * This is the global logger. By default it is a console logger object However this can be changed. THis can be optionaly utilized.
+	 * It is highly reccommended to create your own logger object. However if debug logging for the api is enabled the system will use THIS logger to globaly log debug messages to.
+	 * You can set the global logger if you would like to redirect api debug messages to another log source such as a file rather than the console.
+	 * @return Logger object for global logging.
 	 */
 	public static Logger globalLogger() {
 		return globalSystemLogger;
 	}
 	
+	/**
+	 * Sets the global logger if you would like to redirect api debug messages to another log source such as a file rather than the console.
+	 * @param logger Logger to replace the global logger. cannot be null.
+	 */
 	public static void setGlobalLogger(@Nonnull Logger logger) {
 		if (logger != null) {
 			globalSystemLogger = logger;
