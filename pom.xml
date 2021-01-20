@@ -22,6 +22,7 @@
   </build>
   
   <dependencies>
+
 	 <dependency>
 	  <groupId>org.botka.aveona</groupId>
 	  <artifactId>utility-library-core</artifactId>
