@@ -22,6 +22,8 @@ import test.org.botka.logger.FileLoggerTests;
  */
 public class LogHeader implements Serializable {
 	public static final char LINE_SEP_DEFAULT = ',';
+	public static final char HEADER_START_CHAR = '[';
+	public static final char HEADER_END_CHAR = ']';
 	
 	private static final long serialVersionUID = 8382553458681358168L;
 	private final Vector<ErrorWrapper> ERRORS = new Vector<>();
@@ -46,6 +48,17 @@ public class LogHeader implements Serializable {
 		mLogTime = null;
 		mLogType = null;
 		mSource = null;
+	}
+	
+	/**
+	 * Constructor.
+	 * Parses data from formatted header
+	 * @param formattedHeader Formatted header.
+	 */
+	public LogHeader(String formattedHeader) {
+		this();
+		mFormattedHeader = formattedHeader;
+		//TODO
 	}
 	
 	/**

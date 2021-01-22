@@ -192,7 +192,17 @@ public class FileLogger extends BaseLogger {
 		}
 	}
 
-	
+	private void initBuffer(File file) {
+		mFileWriter = null;
+		mBufferedWriter = null;
+		try {
+			mFileWriter = new FileWriter(file, true);
+			mBufferedWriter = new BufferedWriter(mFileWriter);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 	
 
@@ -329,9 +339,8 @@ public class FileLogger extends BaseLogger {
 				} else {
 					text = "";
 				}
-				System.err.println( text);
-				mFileWriter = new FileWriter(tempLoggerFile, true);
-				mBufferedWriter = new BufferedWriter(mFileWriter);
+				
+				initBuffer(tempLoggerFile);
 				if (mIncludeDefHeader) {
 					mBufferedWriter.write(FILE_HEADER_TEXT);
 					mBufferedWriter.write( "\n" + FILE_LOG_START_TEXT + "\n");
@@ -339,7 +348,6 @@ public class FileLogger extends BaseLogger {
 					mBufferedWriter.flush();
 				}
 			} catch (IOException e) {
-	
 				e.printStackTrace();
 			}
 		}
@@ -352,31 +360,29 @@ public class FileLogger extends BaseLogger {
 					if (this.mBufferedWriter != null) {
 						try {
 							this.mBufferedWriter.write(content);
+							if (mIncludeDefFooter) {
+								mBufferedWriter.write("\n" + FILE_LOG_END_TEXT);
+								mBufferedWriter.write( "\n" + FILE_FOOTER_TEXT);
+							}
 							this.mBufferedWriter.flush();
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} finally {
 							try {
-								if (mIncludeDefFooter) {
-									mBufferedWriter.write("\n" + FILE_LOG_END_TEXT);
-									mBufferedWriter.write( "\n" + FILE_FOOTER_TEXT);
+								if (mBufferedWriter != null) {
+									mBufferedWriter.close();
+									mBufferedWriter = null;
 								}
-								mBufferedWriter.close();
-								mBufferedWriter = null;
 							} catch (IOException e1) {
-								
 								e1.printStackTrace();
 							}
 							if (!writingFile.getAbsolutePath().equals(mLoggerFile.getAbsolutePath())) {
-								//writingFile.renameTo(mLoggerFile);
 								try {
 									Files.move(writingFile.toPath(), mLoggerFile.toPath(),  StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
 								} catch (IOException e) {
 									//Logger.globalLogger().log(LogFactory.createErrorLog(getClass(), e.getMessage()));
 									e.printStackTrace();
 								}
-								
 							}
 						} 	
 					}

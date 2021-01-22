@@ -36,7 +36,7 @@ public interface LocalDebugLogging {
 		if (isGlobalDebugLoggingOverriden()) {
 			return isDebugLoggingLocally();
 		} else {
-			return Logger.globalDebugLogging;
+			return Logger.isLoggingSystemDebugs();
 		}
 		
 	}

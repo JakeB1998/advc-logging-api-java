@@ -39,8 +39,8 @@ import main.org.botka.utility.api.exceptions.NotImplementedYetException;
 public abstract class Logger {
 
 	public static final Logger DEF_GLOBAL_LOGGER = new ConsoleLogger();
-	public static boolean globalDebugLogging = true;
-	private  static Logger globalSystemLogger = DEF_GLOBAL_LOGGER;
+	private static boolean globalDebugLogging = true;
+	private static Logger globalSystemLogger = DEF_GLOBAL_LOGGER;
 	private LogRecorder mLogRecorder;
 	private ActiveLogTypes mActiveLogTypes;
 	private volatile boolean mError;
@@ -65,6 +65,13 @@ public abstract class Logger {
 		return globalSystemLogger;
 	}
 	
+	public static boolean isLoggingSystemDebugs() {
+		return globalDebugLogging;
+	}
+	
+	public void setLoggingSystemDebugs(boolean logSystemDebugs) {
+		globalDebugLogging = logSystemDebugs;
+	}
 	/**
 	 * Sets the global logger if you would like to redirect api debug messages to another log source such as a file rather than the console.
 	 * @param logger Logger to replace the global logger. cannot be null.

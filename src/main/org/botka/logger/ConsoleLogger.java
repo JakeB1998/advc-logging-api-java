@@ -105,7 +105,7 @@ public class ConsoleLogger extends BaseLogger implements LocalDebugLogging {
 				if (log != null) {
 					logString(log.getFormattedLog());
 				} else {
-					if (Logger.globalDebugLogging) {
+					if (Logger.isLoggingSystemDebugs()) {
 						Logger.Console.logError(true, getClass(), "Object 'log' was null thus not logged");
 					}
 				}
