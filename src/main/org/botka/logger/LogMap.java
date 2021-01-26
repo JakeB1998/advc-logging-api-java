@@ -21,4 +21,7 @@ public class LogMap<K> extends HashMap<K, Log> {
 	}
 	
 	
+	
+	
+	
 }
