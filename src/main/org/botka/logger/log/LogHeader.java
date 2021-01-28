@@ -8,12 +8,17 @@ package main.org.botka.logger.log;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Vector;
 
 import javax.annotation.Nonnull;
 
+import org.checkerframework.common.returnsreceiver.qual.This;
+
 import main.org.botka.logger.ErrorWrapper;
 import main.org.botka.logger.log.logtype.LogType;
+import main.org.botka.utility.api.base.ID;
+import main.org.botka.utility.api.security.IDGenerator;
 import test.org.botka.logger.FileLoggerTests;
 
 /**'Header of a log. Ussualy defining variables such as time.
@@ -27,6 +32,7 @@ public class LogHeader implements Serializable {
 	
 	private static final long serialVersionUID = 8382553458681358168L;
 	private final Vector<ErrorWrapper> ERRORS = new Vector<>();
+	private ID mID;
 	private LogHeaderFormat mHeaderFormat;
 	private boolean mLogNulls, mError;
 	private String mFormattedHeader, mLineSeperator;
@@ -41,6 +47,7 @@ public class LogHeader implements Serializable {
 	 * Default constructor.
 	 */
 	public LogHeader() {
+		setID(null);
 		mHeaderFormat = null;
 		mFormattedHeader = null;
 		mLineSeperator = String.valueOf(LINE_SEP_DEFAULT);
@@ -157,8 +164,21 @@ public class LogHeader implements Serializable {
 		mHeaderFormat = headerFormat;
 	}
 	
-	
-	
+	/**
+	 * 
+	 * @param other
+	 * @return
+	 */
+	@Override
+	public boolean equals(Object other) {
+		if (other != null && other instanceof LogHeader) {
+			LogHeader otherHeader = (LogHeader) other;
+			return Objects.equals(otherHeader.getLogType(), (this.getLogType())) 
+					&& Objects.equals(otherHeader.getLogTime(), this.getLogTime());
+					
+		}
+		return false;
+	}
 	
 	/**	
 	 * 
@@ -234,6 +254,37 @@ public class LogHeader implements Serializable {
 	 */
 	public boolean hasErros() {
 		return ERRORS.size() > 0;
+	}
+	
+	/**
+	 * Gets id. if the ID is secured it will always return null;
+	 * @return Log id
+	 */
+	public ID getID() {
+		//TODO  && mID.isSecured()
+		return mID != null ? mID : null;
+	}
+	
+	/**
+	 * Sets the id. If the parameter is null then it will not set Id. if the ID is already null then the parameter will set the logs id.
+	 * If both the current logs id and the parameter to set the id is null then an ID will be generated. This almost always happens at tht construction of the object.
+	 * If the current ID is listed as immutable then the parameter provided will be discarded and NOT set to this logs id.
+	 * @param id Log id
+	 */
+	public void setID(ID id) {
+		if (id != null) {
+			if (mID != null) {
+				mID = id;
+			} else {
+				if (!mID.isImumtable()) {
+					mID = id;
+				} else {
+					//Logger.globalLogger().log(null); //TODO implement warning log
+				}
+			}
+		} else {
+			mID = new ID(IDGenerator.generateSecureID());
+		}
 	}
 	
 	/**

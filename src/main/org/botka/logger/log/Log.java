@@ -120,6 +120,27 @@ public class Log implements Serializable {
 		}
 
 	}
+	
+	/**
+	 * Equality determined by calling the equal method on the log's log body object and log header object.
+	 * @param other
+	 * @return
+	 * @see LogBody
+	 * @see LogHeader
+	 */
+	public boolean equals(Object other) {
+		if (other == null) {
+			return false;
+		}	
+		if (this == other) {
+			return true;
+		}
+		
+		Log log = (Log) other;
+		return log.getLogHeader() != null && log.getLogBody() != null 
+				? log.getLogHeader().equals(this.getLogHeader()) && log.getLogBody().equals(this.getLogBody()) : false;
+		
+	}
 
 	/**
 	 * Formats logs into formated lines that can be used for various purpose.

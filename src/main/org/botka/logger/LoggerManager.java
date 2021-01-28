@@ -25,6 +25,22 @@ public class LoggerManager {
 	private final ID mID;
 	private LoggerMap<String> mLoggerMap;
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public static Logger systemDefaultLogger() {
+		return Logger.globalLogger(); //subject to change
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static Logger globalLogger() {
+		return Logger.globalLogger();
+	}
+	
 	
 	
 	
