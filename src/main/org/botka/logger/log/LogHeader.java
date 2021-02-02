@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Vector;
 
 import javax.annotation.Nonnull;
+import javax.xml.transform.Source;
 
 import org.checkerframework.common.returnsreceiver.qual.This;
 
@@ -334,6 +335,22 @@ public class LogHeader implements Serializable {
 	
 	/**
 	 * 
+	 * @return
+	 */
+	public Class<?> getLogSource(){
+		return mSource;
+	}
+	
+	/**
+	 * 
+	 * @param logSource
+	 */
+	public void setLogSource(Class<?> logSource) {
+		mSource = logSource;
+	}
+	
+	/**
+	 * 
 	 * @return Logtype object.
 	 */
 	public LogType getLogType() {
@@ -355,6 +372,9 @@ public class LogHeader implements Serializable {
 		mLogType = logType;
 	}
 	
+	public LogTag getLogTag() {
+		return mLogTag;
+	}
 	/**
 	 * @param logTag
 	 */

@@ -27,6 +27,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import main.org.botka.logger.log.Log;
 import main.org.botka.logger.log.logtype.ActiveLogTypes;
 import main.org.botka.logger.log.logtype.LogType;
+import main.org.botka.utility.api.base.Filter;
 import main.org.botka.utility.api.exceptions.NotImplementedYetException;
 
 
@@ -42,6 +43,8 @@ public abstract class Logger {
 	private static boolean globalDebugLogging = true;
 	private static Logger globalSystemLogger = DEF_GLOBAL_LOGGER;
 	private LogRecorder mLogRecorder;
+	private Filter<Log> mActiveFilter;
+	private Filter<Log> mWorkingFilter;
 	private ActiveLogTypes mActiveLogTypes;
 	private volatile boolean mError;
 	private String mErrorMessage;
@@ -156,6 +159,14 @@ public abstract class Logger {
 			}
 		}
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean hasActiveFilter() {
+		return getActiveFilter() != null;
+	}
 
 	/**
 	 * 
@@ -233,6 +244,28 @@ public abstract class Logger {
 		
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public Filter<Log> getActiveFilter(){
+		return mActiveFilter;
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public Filter<Log> getWorkingFilter(){
+		return mWorkingFilter;
+	}
+	
+	/**
+	 * 
+	 * @param workingFilter
+	 */
+	public void setWorkingFilter(Filter<Log> workingFilter) {
+		mWorkingFilter = workingFilter;
+	}
 
 	/**
 	 * Static class that allows access to static ethods to quickly log to the console.

@@ -100,8 +100,9 @@ public class FileLoggerTests {
 				+ " I just want it to stay the same. As if I had only turned one monitor off.", System.currentTimeMillis()));
 		FileLogger logger = (FileLogger)this.mFileLogger;
 		short[] headerOrderIds = new LogHeaderFormat.ItemOrderBuilder().classSource().logTag().timeStamp().buildOrderArray();
+		LogHeader logHeader = new LogHeader(System.currentTimeMillis(), getClass() ,"ERROR", new LogHeaderFormat(false,headerOrderIds));
 		mFileLogger.log(new Log(
-				new LogHeader(System.currentTimeMillis(), getClass() ,"ERROR", new LogHeaderFormat(false,headerOrderIds)), new LogBody("This log has a different ordering of header items.")));
+				logHeader, new LogBody(logHeader, "This log has a different ordering of header items.")));
 		
 	}
 	

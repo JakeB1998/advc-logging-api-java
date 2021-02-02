@@ -64,7 +64,8 @@ public class LogFileReader {
 					}
 				}
 				parsedLogs = Arrays.copyOf(parsedLogs, parsedLogs.length + 1);
-				parsedLogs[parsedLogs.length - 1] = new LogContext(new Log(new LogHeader(String.valueOf(header)), new LogBody(String.valueOf(body))));
+				LogHeader logHeader = new LogHeader(String.valueOf(header));
+				parsedLogs[parsedLogs.length - 1] = new LogContext(new Log(logHeader, new LogBody(logHeader,String.valueOf(body))));
 				startIndex = logFileContents.indexOf("[");
 				endIndex = startIndex != -1 ? logFileContents.indexOf("[", startIndex + 1) : -1;
 			}

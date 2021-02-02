@@ -84,7 +84,7 @@ public class Log implements Serializable {
 		mLogHeader = new LogHeader(new LogTime(timeEpoc));
 		mLogHeader.setLogType(logType);
 		mLogHeader.setLogTag(new LogTag(logTag));
-		mLogBody = new LogBody(log.toString());
+		mLogBody = new LogBody(mLogHeader,log.toString());
 
 	}
 
@@ -248,7 +248,15 @@ public class Log implements Serializable {
 	 * @return
 	 */
 	public LogType getLogType() {
-		return mLogHeader.getLogType();
+		return mLogHeader != null ? mLogHeader.getLogType() : null;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public LogTag getLogTag() {
+		return mLogHeader != null ? mLogHeader.getLogTag() : null;
 	}
 
 	/**

@@ -26,7 +26,8 @@ public final class LogFactory {
 	}
 	
 	public static Log createErrorLog(boolean timeStamp, Class<?> source, String logContent) {
-		return new Log(new LogHeader(System.currentTimeMillis(), source, "ERROR", true), new LogBody(logContent));
+		LogHeader logHeader = new LogHeader(System.currentTimeMillis(), source, "ERROR", true);
+		return new Log(logHeader, new LogBody(logHeader, logContent));
 	}
 	
 	
